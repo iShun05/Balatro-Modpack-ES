@@ -1,7 +1,7 @@
 # Guía y Traducción ES
 
 - **Categoría:** Base
-- **Versión incluida:** 0.3
+- **Versión incluida:** 0.4
 - **Autor:** David
 - **ID interno:** `GuiaTraduccionES` · **Carpeta:** `Mods/GuiaTraduccionES`
 - **Página original:** https://github.com/iShun05/GuiaTraduccionES-Balatro
@@ -18,14 +18,16 @@ No modifica los archivos de otros mods:
 las traducciones sobreviven a sus actualizaciones.  
 Estabilidad: corrige más de 30 cierres del juego.  
 Rendimiento: puntuar es unas 30 veces más rápido.  
-v0.3 · Contacto: Instagram @_shun._05  
+v0.4 - Contacto: Instagram @_shun._05  
 
 ## Nota del pack
 
 Además de la guía y la traducción, es la pieza que hace el pack **estable y rápido**:
 
 - **Rendimiento:** «mejoras cuánticas» bajo demanda; puntuar una mano pasa de 7-14 s («Calculando...») a 0,2-0,5 s.
-- **Estabilidad:** 34 parches de Lovely (`lovely.toml`) y protecciones en `main.lua` que corrigen más de 30 cierres del juego en Cryptid, Kino, Bunco, Talisman (Shop Undo, The Binding of Jimbo, Paperback, Bakery, Joker Evolution, Lost Edition), Multiplayer (TheOrder, Persistente, El Brazo), Ortalab, Pokermon y Card Sleeves.
+- **Estabilidad:** 35 parches de Lovely (`lovely.toml`) y protecciones en `main.lua` que corrigen más de 30 cierres del juego en Cryptid, Kino, Bunco, Talisman (Shop Undo, The Binding of Jimbo, Paperback, Bakery, Joker Evolution, Lost Edition), Multiplayer (TheOrder, Persistente, El Brazo), Ortalab, Pokermon y Card Sleeves.
+- **Packs de mods:** botón «PACKS DE MODS» en el menú principal para combinar packs, ver su valoración y aplicarlos (el juego se reabre solo).
+- **Menú principal:** centrado y compacto para que no se corte.
 - **No lo desactives:** si lo haces, vuelven los cierres y la lentitud.
 
 ## Traducción

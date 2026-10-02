@@ -2,7 +2,7 @@
 
 Pack de **30 mods de Balatro** traducidos y explicados en español, revisado para jugar **Multiplayer entre Windows y Mac sin cierres**. Incluye instaladores para los dos sistemas, los mods ya editados y corregidos, sus ajustes compartidos y una ficha en español de cada mod.
 
-- **Versión actual del pack:** v0.1
+- **Versión actual del pack:** v0.2
 - **Plataformas:** Windows 10/11 y macOS (Apple Silicon e Intel), Balatro de Steam
 - **Base:** Steamodded 26.829.0 · Lovely 0.9.0 · Talisman 2.7 · Multiplayer 0.5.5
 
@@ -46,6 +46,25 @@ En el juego: *Opciones → Idioma → Español (España)* y reinicia. Todo el pa
 5. Crear partida: *Jugar en línea → Crear sala* (uno) y *Unirse* con el código (el otro). Las reglas **clasificatorias** exigen un perfil sin mods de contenido; usad las reglas normales o de práctica.
 6. Tu nombre de usuario de Multiplayer no viene en el pack (cada uno pone el suyo la primera vez).
 
+## Packs de mods (elige qué mods usar)
+
+En el menú principal hay un botón **PACKS DE MODS** (también en *Mods → Guía y Traducción ES → Packs*). Marca uno o varios packs y pulsa **Aplicar y reabrir**: el juego se cierra y se vuelve a abrir solo con esos mods.
+
+| Pack | Qué trae |
+|---|---|
+| Calidad de vida | JokerDisplay, Handy, buscador (T), deshacer tienda (U), modo oscuro, Talisman y Multiplayer |
+| Balatro ampliado | Bunco, Paperback, Extra Credit, Bakery, Prism, Lost Edition, Six Suits, Joker Evolution y fundas: estilo y equilibrio del original |
+| Cine (Kino) | Comodines de películas con géneros, golosinas y hechizos |
+| Pokémon | Comodines Pokémon que evolucionan y tipos de energía |
+| Binding of Isaac | Objetos, baratijas y personajes de The Binding of Isaac |
+| Ortalab | Balatro alternativo: 150 comodines, maldiciones y zodiacos |
+| Caos (Cryptid) | Puntuaciones absurdas y cartas rotas a propósito |
+
+- Accesos rápidos: **Solo juego base** (sin mods, solo la traducción), **Solo calidad de vida** y **Marcar todo**.
+- Debajo aparece **qué trae tu combinación** y una **valoración**: en rojo si está desnivelada (Cryptid con otros packs), en naranja si algo se diluye o da problemas (Ortalab mezclado, Kino + Pokémon, Isaac con otro temático, demasiados packs) y en verde las combinaciones buenas.
+- **Partida a medias:** al cambiar de mods se guarda aparte y vuelve sola cuando eliges otra vez esos mismos packs (cargarla con mods distintos cerraría el juego).
+- **Multiplayer:** los dos tenéis que marcar exactamente los mismos packs.
+
 ## Rendimiento: adiós a «Calculando...»
 
 Con todos los mods juntos, cada mano mostraba la pantalla **«Calculando...»** de Talisman durante 7-14 segundos (~8.000 recálculos por mano), incluso sin comodines. La causa: The Binding of Jimbo activa en Steamodded las *mejoras cuánticas*, que recalculan todo el juego cada vez que se consulta la mejora de una carta.
@@ -64,6 +83,9 @@ Antes de publicar el pack se jugaron **partidas automáticas completas durante h
 | Bunco · descripción de ediciones | Al mostrar cualquier carta brillante, holográfica o policromada | Se recoloca un `end` que el parche de Bunco ponía mal |
 | Talisman · números grandes | Al pulsar **Cambiar** en la tienda (Shop Undo), al acabar una mano, y con más de 20 cartas de The Binding of Jimbo, Paperback, Multiplayer, Bunco, Bakery, Kino, Joker Evolution, Lost Edition y Ortalab | Comparaciones seguras entre números grandes y normales |
 | Multiplayer · TheOrder | Al puntuar, si una carta elige al azar entre una lista vacía (en línea, con TheOrder activo) | Se deja al juego base, que devuelve «nada» sin cerrarse |
+| Desbloqueos y récords (Talisman) | Al desbloquear cartas (p. ej. «Copa de sake» de Paperback) o batir el récord de mano con Cartomancer | Se pasan los valores en el formato que espera cada mod |
+| Aviso de desbloqueo | Al mostrar una carta desbloqueada (carta «bloqueada» inexistente) | Se ignoran mejoras de cartas que no existen |
+| Baraja «Keeper» de Isaac | Al empezar una ciega con esa baraja | Cálculo de manos extra compatible con Talisman |
 | Cartas forzadas | Funda «Papel» de Paperback con reglamentos de Multiplayer; funda «Misterio» de Kino | Se deduce el tipo o se crea una carta del mismo tipo |
 | Pokermon / The Binding of Jimbo · créditos | Al pasar el ratón por una etiqueta o sello de otro mod | Se ignoran los que no están registrados |
 | Ortalab · insignia de ciega | Mientras se reconstruye el HUD | Comprobación de que el elemento existe |
@@ -79,7 +101,7 @@ Cada nombre enlaza a su ficha en español (qué hace, autor, página original y 
 | Mod | Categoría | Versión | Para qué sirve |
 |---|---|---|---|
 | [BetterSpanishLocale](docs/mods/BetterSpanishLocale.md) | Base | 1.0 | Corrige la traducción española del juego |
-| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.3 | Esta guía y las traducciones al español |
+| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.4 | Esta guía y las traducciones al español |
 | [Steamodded](docs/mods/smods.md) | Base | 26.829.0 | Cargador de mods: sin él no funciona ninguno |
 | [Talisman](docs/mods/Talisman-2.7.md) | Base | 2.7 | Sin límite de puntuación y sin animaciones lentas |
 | [Cartomancer](docs/mods/Cartomancer.md) | Calidad de vida | 4.17c | Comodidades: apilar cartas, ver tienda... |
@@ -139,9 +161,10 @@ Borra la carpeta `Mods` (Windows: `%APPDATA%\Balatro\Mods`; Mac: `~/Library/Appl
 ## Versiones y código fuente
 | Versión | Fecha | Cambios | Código |
 |---|---|---|---|
-| [`v0.1`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.1) **(actual)** | 2026-10-02 | Primera versión: 30 mods en español, instaladores Windows/Mac, 6 cierres corregidos | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.1) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.1.zip) |
+| [`v0.2`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.2) **(actual)** | 2026-10-02 | Packs de mods combinables, menú principal centrado y más cierres corregidos (Guía v0.4) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.2) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.2.zip) |
+| [`v0.1`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.1) | 2026-10-02 | Primera versión: 30 mods en español, instaladores Windows/Mac, 6 cierres corregidos | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.1) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.1.zip) |
 
-Para volver a una versión: `git checkout v0.1`.
+Para volver a una versión: `git checkout v0.2`.
 
 ## Créditos
 Cada mod pertenece a sus autores (ver su ficha en `docs/mods/`). Este pack solo los reúne, traduce y corrige su compatibilidad.
