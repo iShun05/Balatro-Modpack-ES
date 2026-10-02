@@ -2,6 +2,9 @@
 
 Pack de **30 mods de Balatro** traducidos y explicados en español, revisado para jugar **Multiplayer entre Windows y Mac sin cierres**. Incluye instaladores para los dos sistemas, los mods ya editados y corregidos, sus ajustes compartidos y una ficha en español de cada mod.
 
+> [!WARNING]
+> **v0.2 en pruebas: aún falta por probar algunas cosas.** Los packs *Binding of Isaac*, *Ortalab* y *Caos (Cryptid)* no se han probado todavía por separado, y en Windows falta comprobar que el juego se reabre solo al aplicar un pack (si no se abre, ábrelo desde Steam: los cambios ya están aplicados). Para ir sobre seguro en Multiplayer, usad *Calidad de vida*, *Balatro ampliado*, *Kino* o *Pokémon*. Si el juego se cierra, mándame la pantalla de error por [Instagram](https://www.instagram.com/_shun._05/).
+
 - **Versión actual del pack:** v0.2
 - **Plataformas:** Windows 10/11 y macOS (Apple Silicon e Intel), Balatro de Steam
 - **Base:** Steamodded 26.829.0 · Lovely 0.9.0 · Talisman 2.7 · Multiplayer 0.5.5
