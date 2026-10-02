@@ -1,5 +1,15 @@
 # Historial de cambios — Balatro · Pack de mods en español
 
+## v0.3 — 2026-10-02
+- Incluye **Guía y Traducción ES v0.5**:
+  - **Pantalla de error en español** que señala al mod culpable; con 1, 2 o 3 se desactiva ese mod (y sus dependientes) y el juego se reabre solo. Historial en `guiaes_cierres.log`.
+  - **Comprobador de mods en Multiplayer**: compara todos los mods y versiones con el otro jugador, dice qué falta a cada uno y ofrece «Igualar a <amigo> y reabrir».
+  - **Perfiles de packs con nombre** (hasta 6), p. ej. «Con Marcos» y «Yo solo».
+  - **Reinicio fiable** en la pantalla de error y en el menú «Mods» (el interno de LÖVE fallaba con Multiplayer).
+  - Herramienta `herramientas/revisar_traducciones.py` para mantener las traducciones al día (en la guía).
+- **Probados por separado con el bot sin cierres: todos los packs** (Calidad de vida, Balatro ampliado, Kino, Pokémon, Isaac, Ortalab y Cryptid). Se quita el aviso de v0.2; solo queda por comprobar la reapertura automática en Windows.
+- Archivos: `Mods/GuiaTraduccionES` (actualizado), `README.md`, `docs/mods/GuiaTraduccionES.md`.
+
 ## v0.2 — 2026-10-02
 - Incluye **Guía y Traducción ES v0.4**:
   - **Packs de mods combinables** desde el menú principal (botón «PACKS DE MODS»): Calidad de vida, Balatro ampliado, Kino, Pokémon, Isaac, Ortalab y Cryptid, con descripción de la combinación y valoración (desnivelada, avisos, Multiplayer). El juego se reabre solo al aplicar y la partida a medias se aparta y se recupera.

@@ -2,10 +2,10 @@
 
 Pack de **30 mods de Balatro** traducidos y explicados en español, revisado para jugar **Multiplayer entre Windows y Mac sin cierres**. Incluye instaladores para los dos sistemas, los mods ya editados y corregidos, sus ajustes compartidos y una ficha en español de cada mod.
 
-> [!WARNING]
-> **v0.2 en pruebas: aún falta por probar algunas cosas.** Los packs *Binding of Isaac*, *Ortalab* y *Caos (Cryptid)* no se han probado todavía por separado, y en Windows falta comprobar que el juego se reabre solo al aplicar un pack (si no se abre, ábrelo desde Steam: los cambios ya están aplicados). Para ir sobre seguro en Multiplayer, usad *Calidad de vida*, *Balatro ampliado*, *Kino* o *Pokémon*. Si el juego se cierra, mándame la pantalla de error por [Instagram](https://www.instagram.com/_shun._05/).
+> [!NOTE]
+> **Aún por comprobar:** que en **Windows** el juego se reabra solo al aplicar un pack o al desactivar un mod desde la pantalla de error (en Mac está probado). Si no se abre, ábrelo tú desde Steam: los cambios ya están aplicados. Todos los packs (Calidad de vida, Balatro ampliado, Kino, Pokémon, Isaac, Ortalab y Cryptid) se han probado ya por separado con el bot sin cierres. Si el juego se cierra, la pantalla de error dice qué mod falló y te deja desactivarlo con una tecla.
 
-- **Versión actual del pack:** v0.2
+- **Versión actual del pack:** v0.3
 - **Plataformas:** Windows 10/11 y macOS (Apple Silicon e Intel), Balatro de Steam
 - **Base:** Steamodded 26.829.0 · Lovely 0.9.0 · Talisman 2.7 · Multiplayer 0.5.5
 
@@ -46,8 +46,9 @@ En el juego: *Opciones → Idioma → Español (España)* y reinicia. Todo el pa
 2. **Mismos ajustes**: el pack trae los ajustes de todos los mods (`config/`), incluida la integración **TheOrder** de Multiplayer activada en ambos. No cambiéis ajustes de mods de contenido por separado (Cryptid, Pokermon, Kino...): cambian las cartas que salen y la partida se desincroniza.
 3. **Balatro actualizado** en Steam en los dos.
 4. **No activéis ni desactivéis mods** por separado. Si queréis jugar con menos mods, haced exactamente los mismos cambios los dos y reiniciad el juego.
-5. Crear partida: *Jugar en línea → Crear sala* (uno) y *Unirse* con el código (el otro). Las reglas **clasificatorias** exigen un perfil sin mods de contenido; usad las reglas normales o de práctica.
-6. Tu nombre de usuario de Multiplayer no viene en el pack (cada uno pone el suyo la primera vez).
+5. **Comprobador de mods:** al entrar en la sala, el juego compara tus mods y versiones con los del otro jugador. Si no coinciden, un aviso en español dice qué te falta a ti, qué le falta a él y con qué packs juega, y el botón **«Igualar a <amigo> y reabrir»** pone tus packs como los suyos.
+6. Crear partida: *Jugar en línea → Crear sala* (uno) y *Unirse* con el código (el otro). Las reglas **clasificatorias** exigen un perfil sin mods de contenido; usad las reglas normales o de práctica.
+7. Tu nombre de usuario de Multiplayer no viene en el pack (cada uno pone el suyo la primera vez).
 
 ## Packs de mods (elige qué mods usar)
 
@@ -67,6 +68,12 @@ En el menú principal hay un botón **PACKS DE MODS** (también en *Mods → Gu�
 - Debajo aparece **qué trae tu combinación** y una **valoración**: en rojo si está desnivelada (Cryptid con otros packs), en naranja si algo se diluye o da problemas (Ortalab mezclado, Kino + Pokémon, Isaac con otro temático, demasiados packs) y en verde las combinaciones buenas.
 - **Partida a medias:** al cambiar de mods se guarda aparte y vuelve sola cuando eliges otra vez esos mismos packs (cargarla con mods distintos cerraría el juego).
 - **Multiplayer:** los dos tenéis que marcar exactamente los mismos packs.
+
+### Perfiles guardados
+Marca una combinación, escribe un nombre (p. ej. «Con Marcos» o «Yo solo») y pulsa **GUARDAR COMBINACIÓN**. Los perfiles (hasta 6) aparecen arriba del selector: un clic los carga y la «x» los borra.
+
+## Si el juego se cierra
+La pantalla de error empieza ahora con una explicación en español: **qué mod ha fallado**, en qué archivo, qué significa el error y qué otros mods aparecen. Pulsa **1, 2 o 3** para desactivar ese mod (y los que dependen de él) y el juego se reabre solo; tu partida a medias se aparta para no cerrarse al continuar. **R** reabre sin cambios. Cada cierre queda anotado en `guiaes_cierres.log` (carpeta de datos de Balatro). Si se repite, mándame la pantalla por Instagram.
 
 ## Rendimiento: adiós a «Calculando...»
 
@@ -104,7 +111,7 @@ Cada nombre enlaza a su ficha en español (qué hace, autor, página original y 
 | Mod | Categoría | Versión | Para qué sirve |
 |---|---|---|---|
 | [BetterSpanishLocale](docs/mods/BetterSpanishLocale.md) | Base | 1.0 | Corrige la traducción española del juego |
-| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.4 | Esta guía y las traducciones al español |
+| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.5 | Esta guía y las traducciones al español |
 | [Steamodded](docs/mods/smods.md) | Base | 26.829.0 | Cargador de mods: sin él no funciona ninguno |
 | [Talisman](docs/mods/Talisman-2.7.md) | Base | 2.7 | Sin límite de puntuación y sin animaciones lentas |
 | [Cartomancer](docs/mods/Cartomancer.md) | Calidad de vida | 4.17c | Comodidades: apilar cartas, ver tienda... |
@@ -164,10 +171,11 @@ Borra la carpeta `Mods` (Windows: `%APPDATA%\Balatro\Mods`; Mac: `~/Library/Appl
 ## Versiones y código fuente
 | Versión | Fecha | Cambios | Código |
 |---|---|---|---|
-| [`v0.2`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.2) **(actual)** | 2026-10-02 | Packs de mods combinables, menú principal centrado y más cierres corregidos (Guía v0.4) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.2) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.2.zip) |
+| [`v0.3`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.3) **(actual)** | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de mods en Multiplayer, perfiles de packs y todos los packs probados (Guía v0.5) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.3) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.3.zip) |
+| [`v0.2`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.2) | 2026-10-02 | Packs de mods combinables, menú principal centrado y más cierres corregidos (Guía v0.4) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.2) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.2.zip) |
 | [`v0.1`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.1) | 2026-10-02 | Primera versión: 30 mods en español, instaladores Windows/Mac, 6 cierres corregidos | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.1) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.1.zip) |
 
-Para volver a una versión: `git checkout v0.2`.
+Para volver a una versión: `git checkout v0.3`.
 
 ## Créditos
 Cada mod pertenece a sus autores (ver su ficha en `docs/mods/`). Este pack solo los reúne, traduce y corrige su compatibilidad.
