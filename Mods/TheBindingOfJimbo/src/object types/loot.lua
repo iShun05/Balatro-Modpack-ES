@@ -1,0 +1,19 @@
+SMODS.ConsumableType {
+  key = "tboj_Loot",
+  primary_colour = HEX("C3D5D5"),
+  secondary_colour = HEX("95ACAD"),
+  loc_txt =  	{
+ 		name = 'Loot', -- used on card type badges
+ 		collection = 'Loot Cards', -- label for the button to access the collection
+ 	},
+  collection_row = {6, 6},
+  shop_rate = 4,
+  default = "c_tboj_bomb"
+}
+
+SMODS.UndiscoveredSprite {
+  key = 'tboj_Loot',
+  atlas = 'undiscovered',
+  pos = { x = 0, y = 0 },
+  overlay_pos = { x = 1, y = 0},
+}

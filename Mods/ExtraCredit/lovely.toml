@@ -1,0 +1,71 @@
+
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+
+#Burglar instant for Bobby compat
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''
+ease_discard(-G.GAME.current_round.discards_left, nil, true)
+'''
+position = 'at'
+payload = '''
+ease_discard(-G.GAME.current_round.discards_left, true, true)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''
+ease_hands_played(self.ability.extra)
+'''
+position = 'at'
+payload = '''
+ease_hands_played(self.ability.extra, true)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = '''
+idol_card = {suit = 'Spades', rank = 'Ace'},
+mail_card = {rank = 'Ace'},
+ancient_card = {suit = 'Spades'},
+'''
+position = 'after'
+payload = '''
+tuxedo_card = {suit = 'Spades'},
+farmer_card = {suit = 'Spades'},
+fish_rank = {rank = 'Ace'},
+'''
+match_indent = true
+
+# manually check lucky 7 for quantum enhancments
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = '''if G.GAME.current_round.current_hand.handname ~= disp_text then delay(0.3) end'''
+position = 'before'
+payload = '''
+if next(find_joker("Lucky 7")) then
+    local thunk = false
+    for i=1, #scoring_hand do
+        if scoring_hand[i]:get_id() == 7 and not SMODS.has_no_rank(scoring_hand[i]) then
+            thunk = true break
+        end
+    end
+    if thunk then
+        for i=1, #scoring_hand do
+            SMODS.enh_cache:write(scoring_hand[i], nil)
+            scoring_hand[i].gambling = true
+        end
+    end
+end
+'''

@@ -1,0 +1,21 @@
+[manifest]
+version = "1.0.0"
+priority = 0
+
+# Load solatro.lua as a module before main.lua finishes loading.
+# NOTE: lovely resolves module sources against the MOD ROOT (not this toml's
+# folder) - "../solatro.lua" crashes with "not found in preloaded sources".
+[[patches]]
+[patches.module]
+source = "solatro.lua"
+before = "main.lua"
+name = "solatro"
+
+# Kick it off where the source patch used to require it
+[[patches]]
+[patches.pattern]
+target = "main.lua"
+pattern = "require \"challenges\""
+position = "after"
+payload = "require \"solatro\""
+match_indent = true

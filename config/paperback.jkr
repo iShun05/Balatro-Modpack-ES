@@ -1,0 +1,16 @@
+return {
+	["vouchers_enabled"] = true,
+	["tags_enabled"] = true,
+	["ranks_enabled"] = true,
+	["ego_gifts_enabled"] = true,
+	["blinds_enabled"] = true,
+	["plague_doctor_quotes_enabled"] = true,
+	["upgrade_indicators"] = true,
+	["minor_arcana_enabled"] = true,
+	["suits_enabled"] = true,
+	["enhancements_enabled"] = true,
+	["editions_enabled"] = true,
+	["paperclips_enabled"] = true,
+	["show_credits"] = true,
+	["spectrals_enabled"] = true,
+}

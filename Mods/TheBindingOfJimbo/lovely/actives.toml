@@ -1,0 +1,232 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 1
+
+# Emplace the card when bought
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'elseif c1.ability.consumeable then'
+position = 'at'
+payload = '''elseif c1.config.center.set == "tboj_Active" then
+  G.tboj_Actives:emplace(c1)
+elseif c1.ability.consumeable then
+'''
+match_indent = true
+times = 1
+
+# Make them appear in the shop
+## this one does nothing as weights are enabled
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = "local polled_rate = pseudorandom(pseudoseed('cdt'..G.GAME.round_resets.ante))*total_rate"
+position = 'before'
+payload = '''total_rate = total_rate + G.GAME.tboj_active_rate'''
+match_indent = true
+times = 1
+
+## this one does nothing as weights are enabled
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = 'for _, v in ipairs(rates) do'
+position = 'before'
+payload = '''table.insert(rates, { type = "tboj_Active", val = G.GAME.tboj_active_rate  })'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils/weights.lua"]'
+pattern = '''        for _,v in ipairs(SMODS.ConsumableType.obj_buffer) do
+            args.types[#args.types + 1] = v
+        end'''
+position = 'after'
+payload = '''args.types[#args.types + 1] = "tboj_Active"'''
+match_indent = true
+times = 1
+
+# Sell and use buttons
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''or self.ability.set == "tboj_Trinket"'''
+position = 'after'
+payload = '''or self.ability.set == "tboj_Active"
+then'''
+match_indent = true
+times = 1
+
+# Keep on use
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'if card.ability.consumeable and not select_to then'
+position = 'before'
+payload = '''if card.ability.set == "tboj_Active" then
+  local obj = card.config.center
+  if obj.keep_on_use and type(obj.keep_on_use) == 'function' then
+    nc = obj:keep_on_use(card)
+  end
+end
+'''
+match_indent = true
+times = 1
+
+# Use effect
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'elseif card.ability.consumeable then'
+position = 'before'
+payload = '''elseif card.ability.set == "tboj_Active" then
+  if nc then
+    if area then area:remove_from_highlighted(card) end
+    play_sound('cardSlide2', nil, 0.3)
+    dont_dissolve = true
+  end
+  discover_card(card.config.center)
+  if not nc then draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end
+  delay(0.2)
+  e.config.ref_table:use_active(area)
+'''
+match_indent = true
+times = 1
+
+# Calculate the area
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+pattern = "-- TARGET: add your own CardAreas for joker evaluation"
+position = "after"
+payload = '''
+if G.tboj_Actives and G.tboj_Actives.cards then
+    t[#t+1] = G.tboj_Actives
+end
+'''
+match_indent = true
+
+# DebugPlus area copy
+[[patches]]
+[patches.pattern]
+target = '=[lovely debugplus.core "debugplus/core.lua"]'
+pattern = "elseif _card.ability.consumeable then"
+position = "before"
+payload = '''
+elseif _card.ability.set == "tboj_Active" then
+  _area = G.tboj_Actives
+'''
+match_indent = true
+
+# Using a reusable active in the shop or a pack doesn't drop the shop/pack ui
+# shop
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.shop.alignment.offset.y = G.ROOM.T.y + 29"
+position = "before"
+payload = '''
+if card.ability.set ~= "tboj_Active" or (card.ability.set == "tboj_Active" and not nc) then
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.shop.alignment.offset.y = G.ROOM.T.y + 29"
+position = "after"
+payload = '''
+end
+'''
+match_indent = true
+times = 1
+
+# pack
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.booster_pack.alignment.offset.y = G.ROOM.T.y + 29"
+position = "before"
+payload = '''
+if card.ability.set ~= "tboj_Active" or (card.ability.set == "tboj_Active" and not nc) then
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.booster_pack.alignment.offset.y = G.ROOM.T.y + 29"
+position = "after"
+payload = '''
+end
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.booster_pack.alignment.offset.y = G.booster_pack.alignment.offset.py"
+position = "before"
+payload = '''
+if G.booster_pack.alignment.offset.py then 
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = "G.booster_pack.alignment.offset.py = nil"
+position = "after"
+payload = '''
+end
+'''
+match_indent = true
+times = 1
+
+# Undiscovered sprite
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/overrides.lua"]'
+pattern = "elseif _center.set == 'Joker' or _center.consumeable or _center.set == 'Voucher' then"
+position = "before"
+payload = '''
+elseif not self.params.bypass_discovery_center and _center.set == 'tboj_Active' and (not _center.discovered) and (not TBOJ.table_contains({
+    G.STATES.SMODS_BOOSTER_OPENED,
+    G.STATES.SMODS_REDEEM_VOUCHER,
+    G.STATES.SELECTING_HAND,
+    G.STATES.HAND_PLAYED,
+    G.STATES.DRAW_TO_HAND,
+    G.STATES.GAME_OVER,
+    G.STATES.SHOP,
+    G.STATES.PLAY_TAROT,
+    G.STATES.BLIND_SELECT,
+    G.STATES.ROUND_EVAL,
+    G.STATES.TAROT_PACK,
+    G.STATES.PLANET_PACK,
+    G.STATES.SPECTRAL_PACK,
+    G.STATES.STANDARD_PACK,
+    G.STATES.BUFFOON_PACK,
+    G.STATES.NEW_ROUND,
+  },G.STATE)) then
+  local atlas = SMODS.get_atlas("tboj_undiscovered")
+  local pos = { x = 3, y = 0 }
+  self.children.center = SMODS.create_sprite(self.T.x, self.T.y, self.T.w, self.T.h, atlas, pos)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''if not self.bypass_lock and self.config.center.unlocked ~= false and'''
+position = 'before'
+payload = '''if not self.bypass_lock and self.config.center.unlocked ~= false and (self.ability.set == 'tboj_Active') and
+not self.config.center.discovered and ((self.area ~= G.tboj_Actives and self.area) or not self.area) then
+  card_type = 'Undiscovered'
+end'''
+match_indent = true

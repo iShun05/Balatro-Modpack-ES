@@ -1,0 +1,15 @@
+return {
+	["blind_col"] = 1,
+	["cocktail"] = "11111111111111111111111111111111111111111111H",
+	["integrations"] = {
+		["Preview"] = false,
+		["TheOrder"] = true,
+	},
+	["logging"] = false,
+	["misprint_display"] = true,
+	["preview"] = {
+	},
+	["server_port"] = 8788,
+	["server_url"] = "balatro.virtualized.dev",
+	["unlocked"] = true,
+}

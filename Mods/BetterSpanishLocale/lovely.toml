@@ -1,0 +1,27 @@
+[manifest]
+version = "1.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.regex]
+target = "functions/UI_definitions.lua"
+pattern = "text = localize\\('k_round'\\), scale = 0\\.42"
+position = "at"
+payload = "text = localize('k_upper_round'), scale = 0.42"
+match_indent = true
+
+# Localizable thousands separator
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = '''
+return sign..(formatted:reverse():gsub("(%d%d%d)", "%1,"):gsub(",$", ""):reverse())'''
+position = "at"
+payload = '''
+sep = localize('thousands_sep')
+repeat
+    formatted, k = formatted:gsub("^(%d+)(%d%d%d)", "%1"..sep.."%2")
+until k == 0
+return sign..formatted'''
+match_indent = true

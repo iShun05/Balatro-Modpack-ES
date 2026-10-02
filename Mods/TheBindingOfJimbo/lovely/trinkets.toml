@@ -1,0 +1,127 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Emplace the card when bought
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'if c1.ability.consumeable then'
+position = 'at'
+payload = '''if c1.ability.set == "tboj_Trinket" then
+  G.tboj_Trinkets:emplace(c1)
+elseif c1.ability.consumeable then
+'''
+match_indent = true
+times = 1
+
+# Make them appear in the shop
+## this one does nothing as weights are enabled
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = "local polled_rate = pseudorandom(pseudoseed('cdt'..G.GAME.round_resets.ante))*total_rate"
+position = 'before'
+payload = '''total_rate = total_rate + G.GAME.tboj_trinket_rate'''
+match_indent = true
+times = 1
+
+## this one does nothing as weights are enabled
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = 'for _, v in ipairs(rates) do'
+position = 'before'
+payload = '''table.insert(rates, { type = "tboj_Trinket", val = G.GAME.tboj_trinket_rate  })'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils/weights.lua"]'
+pattern = '''        for _,v in ipairs(SMODS.ConsumableType.obj_buffer) do
+            args.types[#args.types + 1] = v
+        end'''
+position = 'after'
+payload = '''args.types[#args.types + 1] = "tboj_Trinket"'''
+match_indent = true
+times = 1
+
+# Sell button
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''if self.ability.consumeable or self.ability.set == 'Joker' or (self.area and self.area == G.pack_cards) then'''
+position = 'at'
+payload = '''if self.ability.consumeable or self.ability.set == 'Joker' or (self.area and self.area == G.pack_cards)
+or self.ability.set == "tboj_Trinket"'''
+match_indent = true
+times = 1
+
+# Calculate the area
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+pattern = "-- TARGET: add your own CardAreas for joker evaluation"
+position = "after"
+payload = '''
+if G.tboj_Trinkets and G.tboj_Trinkets.cards then
+    t[#t+1] = G.tboj_Trinkets
+end
+'''
+match_indent = true
+
+# DebugPlus area copy
+[[patches]]
+[patches.pattern]
+target = '=[lovely debugplus.core "debugplus/core.lua"]'
+pattern = "elseif _card.ability.consumeable then"
+position = "before"
+payload = '''
+elseif _card.ability.set == "tboj_Trinket" then
+  _area = G.tboj_Trinkets
+'''
+match_indent = true
+
+# Undiscovered sprite
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/overrides.lua"]'
+pattern = "elseif _center.set == 'Joker' or _center.consumeable or _center.set == 'Voucher' then"
+position = "before"
+payload = '''
+elseif not self.params.bypass_discovery_center and _center.set == 'tboj_Trinket' and (not _center.discovered) and (not TBOJ.table_contains({
+    G.STATES.SMODS_BOOSTER_OPENED,
+    G.STATES.SMODS_REDEEM_VOUCHER,
+    G.STATES.SELECTING_HAND,
+    G.STATES.HAND_PLAYED,
+    G.STATES.DRAW_TO_HAND,
+    G.STATES.GAME_OVER,
+    G.STATES.SHOP,
+    G.STATES.PLAY_TAROT,
+    G.STATES.BLIND_SELECT,
+    G.STATES.ROUND_EVAL,
+    G.STATES.TAROT_PACK,
+    G.STATES.PLANET_PACK,
+    G.STATES.SPECTRAL_PACK,
+    G.STATES.STANDARD_PACK,
+    G.STATES.BUFFOON_PACK,
+    G.STATES.NEW_ROUND,
+  },G.STATE)) then
+  local atlas = SMODS.get_atlas("tboj_undiscovered")
+  local pos = { x = 2, y = 0 }
+  self.children.center = SMODS.create_sprite(self.T.x, self.T.y, self.T.w, self.T.h, atlas, pos)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = '''if not self.bypass_lock and self.config.center.unlocked ~= false and'''
+position = 'before'
+payload = '''if not self.bypass_lock and self.config.center.unlocked ~= false and (self.ability.set == 'tboj_Trinket') and
+not self.config.center.discovered and ((self.area ~= G.tboj_Trinkets and self.area) or not self.area) then
+  card_type = 'Undiscovered'
+end'''
+match_indent = true

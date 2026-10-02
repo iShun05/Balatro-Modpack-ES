@@ -1,0 +1,179 @@
+SMODS.Back {
+    name = "Pumpkin Deck",
+    key = "kinoween_pumpkin",
+    atlas = "kino_backs",
+    pos = {x = 0, y = 3},
+    config = {
+    },
+    apply = function()
+    end,
+    calculate = function(self, card, context)
+        if context.setting_blind and not context.repetition and not context.blueprint then
+            for i = 1, (G.consumeables.config.card_limit - #G.consumeables.cards) do
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    if G.consumeables.config.card_limit > #G.consumeables.cards then
+                        play_sound('timpani')
+                        local card = create_card('confection', G.consumeables, nil, nil, nil, nil, "c_kino_candycorn", 'kinoween_pumpkin')
+                        if G.GAME.modifiers.kinoween_pumpkin_sleeve then
+                            if pseudorandom("snack_boost_golden") < 0.5 then
+                                SMODS.Stickers['kino_goldleaf']:apply(card, true)
+                            end
+                            if pseudorandom("snack_boost_choco") < 0.5 then
+                                SMODS.Stickers['kino_choco']:apply(card, true)
+                            end
+                            if pseudorandom("snack_boost_XL") < 0.5 then
+                                SMODS.Stickers['kino_extra_large']:apply(card, true)
+                            end
+                        end
+                        
+                        card:add_to_deck()
+                        G.consumeables:emplace(card)
+                        card:juice_up(0.3, 0.5)
+                    end
+                    return true end }))
+            end
+            delay(0.6)
+        end
+    end,
+    -- Unlock Functions
+    unlocked = false,
+    locked_loc_vars = function(self, info_queue, card)
+        return {
+            vars = {
+                G.PROFILES[G.SETTINGS.profile].career_stats.kino_jumpscared_times or 0
+            }
+        }
+    end,
+    check_for_unlock = function(self, args)
+        if args.type == 'kino_jumpscare' then
+            if G.PROFILES[G.SETTINGS.profile].career_stats.kino_jumpscared_times and G.PROFILES[G.SETTINGS.profile].career_stats.kino_jumpscared_times >= 10 then
+                unlock_card(self)
+            end
+        end
+    end,
+}
+
+SMODS.Back {
+    name = "Vampire Deck",
+    key = "kinoween_vampire",
+    atlas = "kino_backs",
+    pos = {x = 1, y = 3},
+    config = {
+        blood_counters = 5,
+        factor = 3,
+    },
+    loc_vars = function(self, info_queue, card)
+        return {
+            vars = {
+                self.config.factor,
+                self.config.blood_counters
+            }
+        }
+    end,
+    calculate = function(self, card, context)
+        -- When you play a single enhanced card, Drain it and give a random joker +20% power
+        if context.setting_blind  then
+            for i = 1, card.effect.center.config.blood_counters do
+                local _target = pseudorandom_element(G.playing_cards, pseudoseed("kino_vampire_deck"))
+                _target:bb_counter_apply("counter_kino_blood", 1)
+            end
+        end
+
+        if context.modify_weights then
+            for _, _object in ipairs(context.pool) do
+                local _center = G.P_CENTERS[_object.key]
+                if _center and _center.config.is_vampire then
+                    _object.weight = _object.weight * card.effect.center.config.factor
+                end
+            end
+        end
+    end,
+    -- Unlock Functions
+    unlocked = false,
+    locked_loc_vars = function(self, info_queue, card)
+        return {
+            vars = {
+            }
+        }
+    end,
+    check_for_unlock = function(self, args)
+        if args.type == 'discover_amount' then
+            local _total_count = 0
+            local _discovered_count = 0
+            for i, _joker in pairs(G.P_CENTERS) do
+                if kino_quality_check(_joker, 'is_vampire') then
+                    _total_count = _total_count + 1
+                    if _joker.discovered then
+                        _discovered_count = _discovered_count + 1
+                    end
+                end
+            end
+
+            if _total_count == _discovered_count then
+                unlock_card(self)
+            end
+        end
+    end,
+}
+
+function Kino.kinoween_ban_list()
+    local _added_values = {
+        -- Blinds
+        bl_ox = true,
+        bl_mouth = true,
+        bl_fish = true,
+        bl_club = true,
+        bl_manacle = true,
+        bl_tooth = true,
+        bl_wall = true,
+        bl_house = true,
+        bl_mark = true,
+        bl_wheel = true,
+        bl_arm = true,
+        bl_goad = true,
+        bl_water = true,
+        bl_plant = true,
+        bl_head = true,
+        bl_window = true,
+        bl_pillar = true,
+        bl_flint = true,
+
+        -- Tags
+        tag_uncommon = true,
+        tag_rare = true,
+        tag_negative = true,
+        tag_foil = true,
+        tag_holo = true,
+        tag_polychrome = true,
+        tag_investment = true,
+        tag_voucher = true,
+        tag_boss = true,
+        tag_standard = true,
+        tag_charm = true,
+        tag_meteor = true,
+        tag_buffoon = true,
+        tag_handy = true,
+        tag_garbage = true,
+        tag_ethereal = true,
+        tag_coupon = true,
+        tag_double = true,
+        tag_juggle = true,
+        tag_d_six = true,
+        tag_top_up = true,
+        tag_skip = true,
+        tag_orbital = true,
+        tag_economy = true,
+        -- Kino Tags
+        tag_kino_counter = true,
+        tag_kino_oscar = true,
+        tag_kino_snacktag = true,
+        tag_kino_dinner = true
+        -- Centers
+
+    }
+
+    for _key, _bool in pairs(_added_values) do
+        G.GAME.banned_keys[_key] = true
+    end
+    
+end

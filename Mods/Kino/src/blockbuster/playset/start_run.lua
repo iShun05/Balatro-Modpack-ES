@@ -1,0 +1,80 @@
+local _o_gsr = Game.start_run
+function Game:start_run(args)
+    local ret = _o_gsr(self, args)
+
+    if Blockbuster.Playset.startup and Blockbuster.Playset.startup.choices and
+    Blockbuster.Playset.startup.choices.playset then
+        args.playset = Blockbuster.Playset.startup.choices.playset
+    end
+    -- args.playset = Blockbuster.Playset.Playsets["kino_science_pack"]
+
+    if args.playset then
+
+        -- load in item legality
+        local _playset = args.playset
+        local _legal_items = {}
+        local _banned_items = {}
+        local _DEBUG_count = 0
+        local _legal_sets = args.playset.sets or {}
+        local _modifications_legal = {}
+        local _modifications_banned = {}
+        local DEBUG_hash = {}
+        
+        if Blockbuster.Playset.startup.contentPackages then
+            for _key, _state in pairs(Blockbuster.Playset.startup.contentPackages) do
+                local _bool = true
+                if _state == "Ban" then _bool = false end
+                _playset.packages[_key] = _bool
+            end
+        end
+
+        for _package_key, _bool in pairs(_playset.packages) do
+            local _content_package = Blockbuster.Playset.ContentPackages[_package_key]
+            if _content_package ~= nil then
+            else
+                print("Could not find " .. _package_key)
+            end
+
+            if _content_package and _content_package.items then
+                for _key, _ in pairs(_content_package.items) do
+                    if _bool == true then
+                        _legal_items[_key] = true
+                    else
+                        _banned_items[_key] = true
+                    end
+                    _DEBUG_count = _DEBUG_count + 1
+                end
+            end
+
+
+
+            if _content_package and _content_package.sets then
+                for _index, _set in ipairs(_content_package.sets) do
+                    _legal_sets[_set] = true
+                end
+            end
+        end
+
+        -- ban and whitelist items
+        for _key, _object in pairs(G.P_CENTERS) do
+            if _legal_sets[_object.set] then
+                if _legal_items[_key] then
+                    DEBUG_hash[_key] = true
+                end
+
+                if _banned_items[_key] or not _legal_items[_key] then
+                    G.GAME.banned_keys[_key] = true
+                end
+            end
+        end
+    end
+
+    return ret
+end
+
+local igo = Game.init_game_object
+Game.init_game_object = function(self)
+    local ret = igo(self)
+    Blockbuster.Playset.generate_base_playsets()
+    return ret
+end

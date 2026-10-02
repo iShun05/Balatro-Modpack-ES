@@ -1,0 +1,10 @@
+return {
+	["menu_toggle"] = true,
+	["credit_pos"] = 1,
+	["ortalab_only"] = true,
+	["reduced_mod_badge"] = false,
+	["placeholders"] = true,
+	["enhancement_skip"] = false,
+	["loteria_skip"] = false,
+	["initial_setup_demo_3"] = true,
+}

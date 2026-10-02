@@ -1,0 +1,17 @@
+return {
+	["hide_no_collection"] = true,
+	["disable_ctrl_enter"] = true,
+	["size"] = 0.7,
+	["show_all_tags"] = false,
+	["arrow_key_scroll"] = false,
+	["disable_cheats"] = true,
+	["close_on_esc"] = false,
+	["columns"] = 4,
+	["rows"] = 4,
+	["autofocus"] = true,
+	["sensitivity"] = 1,
+	["scroll_full_page"] = false,
+	["pinned_keys"] = {
+	},
+	["hide_undiscovered"] = false,
+}

@@ -1,0 +1,6 @@
+*.bat -text
+*.ps1 -text
+*.dll binary
+*.dylib binary
+*.png binary
+*.ogg binary

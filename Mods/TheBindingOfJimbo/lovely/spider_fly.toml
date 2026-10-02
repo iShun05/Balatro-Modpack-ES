@@ -1,0 +1,65 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 2
+
+# Prevent highlighting
+[[patches]]
+[patches.regex]
+target = 'cardarea.lua'
+pattern = '--if self.config.highlighted_limit <= #self.highlighted then return end'
+position = 'before'
+payload = '''
+if self == G.tboj_spiders or self == G.tboj_flies then return end
+'''
+match_indent = true
+times = 1
+
+# Emplace the card when bought
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = 'elseif c1.ability.consumeable then'
+position = 'at'
+payload = '''elseif c1.config.center.set == "tboj_spiderfly" then
+  if c1.config.center.key == "spiderfly_tboj_blue_spider" then
+    G.tboj_spiders:emplace(c1)
+  else
+    G.tboj_flies:emplace(c1)
+  end
+elseif c1.ability.consumeable then
+'''
+match_indent = true
+times = 1
+
+# Calculate the area
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+pattern = "-- TARGET: add your own CardAreas for joker evaluation"
+position = "after"
+payload = '''
+if G.tboj_flies and G.tboj_flies.cards then
+  t[#t+1] = G.tboj_flies
+end
+if G.tboj_spiders and G.tboj_spiders.cards then
+  t[#t+1] = G.tboj_spiders
+end
+'''
+match_indent = true
+
+# DebugPlus area copy
+[[patches]]
+[patches.pattern]
+target = '=[lovely debugplus.core "debugplus/core.lua"]'
+pattern = "elseif _card.ability.consumeable then"
+position = "before"
+payload = '''
+elseif _card.ability.set == "tboj_spiderfly" then
+  if _card.config.center.key == "spiderfly_tboj_blue_spider" then
+    _area = G.tboj_spiders
+  else
+    _area = G.tboj_flies
+  end
+'''
+match_indent = true

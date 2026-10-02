@@ -1,0 +1,17 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if SMODS.smeared_check(self, suit) then"
+position = "before"
+match_indent = true
+payload = '''
+-- For It's TV Time Calculations
+if PB_UTIL.tenna_check(self, suit) then
+  return true
+end
+'''

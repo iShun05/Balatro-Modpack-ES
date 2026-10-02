@@ -1,0 +1,57 @@
+return {
+	["texture_configs"] = {
+		["texpack_darktextures_dark"] = {
+			["alt_tex_darktextures_dark_spectral"] = true,
+			["alt_tex_darktextures_dark_jokers"] = true,
+			["alt_tex_darktextures_dark_tags"] = true,
+			["alt_tex_darktextures_base_card"] = true,
+			["alt_tex_darktextures_dark_decks"] = true,
+			["alt_tex_darktextures_dark_seals"] = true,
+			["alt_tex_darktextures_dark_vouchers"] = true,
+			["alt_tex_darktextures_dark_boosters"] = true,
+			["alt_tex_darktextures_dark_enhance"] = true,
+			["alt_tex_darktextures_dark_tarot"] = true,
+			["alt_tex_darktextures_dark_planet"] = true,
+		},
+		["texpack_better_esp_pack_ES"] = {
+			["alt_tex_better_esp_voucher"] = true,
+			["alt_tex_better_esp_tarot"] = true,
+			["alt_tex_better_esp_joker_ES"] = true,
+			["alt_tex_better_esp_blind"] = true,
+			["alt_tex_better_esp_planet"] = true,
+			["alt_tex_better_esp_spectral"] = true,
+		},
+		["texpack_kino_retextured"] = {
+			["alt_tex_kino_atlas_9"] = true,
+			["alt_tex_kino_atlas_10"] = true,
+			["alt_tex_kino_atlas_1"] = true,
+			["alt_tex_kino_atlas_2"] = true,
+			["alt_tex_kino_atlas_3"] = true,
+			["alt_tex_kino_atlas_4"] = true,
+			["alt_tex_kino_atlas_5"] = true,
+			["alt_tex_kino_atlas_6"] = true,
+			["alt_tex_kino_atlas_7"] = true,
+			["alt_tex_kino_atlas_8"] = true,
+		},
+		["texpack_better_esp_pack_MX"] = {
+			["alt_tex_better_esp_voucher"] = true,
+			["alt_tex_better_esp_joker_MX"] = true,
+			["alt_tex_better_esp_tarot"] = true,
+			["alt_tex_better_esp_blind"] = true,
+			["alt_tex_better_esp_planet"] = true,
+			["alt_tex_better_esp_spectral"] = true,
+		},
+		["texpack_ortalab_alt_orta"] = {
+			["alt_tex_ortalab_alt_zodiac"] = true,
+			["alt_tex_ortalab_alt_loteria_booster"] = true,
+		},
+		["texpack_cry_jolly_texture"] = {
+			["alt_tex_cry_jolly_jokers"] = true,
+		},
+		["texpack_poke_pokestakes"] = {
+			["alt_tex_poke_chips"] = true,
+		},
+	},
+	["selected"] = {
+	},
+}

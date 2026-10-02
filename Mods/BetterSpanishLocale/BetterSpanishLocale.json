@@ -1,0 +1,16 @@
+{
+	"name": "BetterSpanishLocale",
+	"display_name": "Better Spanish Locale",
+	"id": "BetterSpanishLocale",
+	"prefix": "better_esp",
+	"author": [
+		"CuboManco"
+	],
+	"version": "1.0",
+	"badge_colour": "FF0000",
+	"dependencies": [
+		"Steamodded (>=1.0.0~)"
+	],
+	"main_file": "src/better_esp.lua",
+	"description": "Fixes several mistakes and inconsistencies with the Spanish translations"
+}

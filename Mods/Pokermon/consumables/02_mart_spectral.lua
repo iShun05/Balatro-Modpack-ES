@@ -1,0 +1,221 @@
+local transformation = {
+  name = "transformation",
+  key = "transformation",
+  set = "Spectral",
+  loc_vars = function(self, info_queue, center)
+    info_queue[#info_queue+1] = {set = 'Other', key = 'energize'}
+    return {vars = {(pokermon_config.unlimited_energy and localize("poke_unlimited_energy")) or pokermon.energy.max + (G.GAME.poke_energy_plus or 0)}}
+  end,
+  pos = { x = 2, y = 1 },
+  atlas = "AtlasConsumablesBasic",
+  cost = 4,
+  etype = "Trans",
+  hidden = true,
+  soul_set = "poke_energy",
+  soul_rate = .025,
+  unlocked = true,
+  discovered = true,
+  can_use = function(self, card)
+    local choice = pokermon.find_leftmost_or_highlighted()
+    return choice and pokermon.get_type(choice) or false
+  end,
+  use = function(self, card, area, copier)
+    local choice = pokermon.find_leftmost_or_highlighted()
+    if pokermon.get_type(choice) then pokermon.energy.increase(choice, pokermon.get_type(choice)) end
+    if not choice.config.center.aux_poke then
+      local highest = pokermon.get_highest_evo(choice)
+      if highest and type(highest) == "string" then
+        local prefix = choice.config.center.poke_custom_prefix or "poke"
+        local forced_key = "j_"..prefix.."_"..highest
+        local context = {}
+        pokermon.evolve(choice, forced_key)
+      end
+    end
+  end
+}
+
+local get_mega_target = function(self)
+  return pokermon.find_leftmost_or_highlighted(function(joker)
+    return not self.ability.extra.used_on and pokermon.get_mega(joker) and not joker.debuff
+        or joker.config.center.rarity == "poke_mega" and joker.unique_val == self.ability.extra.used_on
+        or G.GAME.modifiers.poke_infinite_megastone and ((pokermon.get_mega(joker) and not joker.debuff) or joker.config.center.rarity == "poke_mega")
+  end)
+end
+
+local megastone = {
+  name = "megastone",
+  key = "megastone",
+  set = "Spectral",
+  artist = {"MyDude_YT", "Lemmanade"},
+  helditem = true,
+  saveable = true,
+  config = {extra = {usable = true, used_on = nil}},
+  loc_vars = function(self, info_queue, card)
+    info_queue[#info_queue + 1] = { set = 'Other', key = 'endless' }
+    if not G.GAME.modifiers.poke_infinite_megastone then
+      info_queue[#info_queue+1] = {set = 'Other', key = 'mega_rule'}
+    end
+    local joker = pokermon.find_card(function(joker)
+        return joker.config.center.rarity == "poke_mega" and joker.unique_val == card.ability.extra.used_on
+      end)
+    if joker then
+      info_queue[#info_queue+1] = {set = 'Other', key = 'mega_used_on', vars = {localize({ type = "name_text", set = "Joker", key = joker.config.center.key})}}
+    end
+  end,
+  pos = { x = 4, y = 5 },
+  atlas = "AtlasConsumablesBasic",
+  cost = 4,
+  hidden = true,
+  soul_set = "poke_item",
+  soul_rate = .005,
+  unlocked = true,
+  discovered = true,
+  can_use = function(self, card)
+    -- location-based usability checks
+    if (#G.consumeables.cards + G.GAME.consumeable_buffer >= G.consumeables.config.card_limit) and card.area == G.pack_cards then return false end
+    if card.area == G.shop_jokers then return false end
+    if not (G.jokers and G.jokers.cards) or #G.jokers.cards == 0 then return false end
+    if not card.ability.extra.usable then return false end
+    -- Find an eligible pokemon (also checks if the mega stone has been used, and on which joker)
+    local target = get_mega_target(card)
+    if not target then return false end
+    -- If none of that nonsense happened you can use it I guess
+    return true
+  end,
+  use = function(self, card, area, copier)
+    local target = get_mega_target(card)
+    local prefix = target.config.center.poke_custom_prefix or "poke"
+    if pokermon.get_mega(target) then
+      local forced_key = "j_"..prefix.."_"..pokermon.get_mega(target)
+      card.ability.extra.used_on = not G.GAME.modifiers.poke_infinite_megastone and target.unique_val
+      pokermon.evolve(target, forced_key)
+    else
+      local forced_key = pokermon.get_previous_evo(target, true)
+      card.ability.extra.used_on = nil
+      pokermon.devolve(target, forced_key)
+    end
+    card.ability.extra.usable = false
+  end,
+  calculate = function(self, card, context)
+    if context.end_of_round then
+      local mega = pokermon.find_card(function(joker) return joker.config.center.rarity == "poke_mega" and joker.unique_val == card.ability.extra.used_on end)
+      if not mega then card.ability.extra.used_on = nil end
+      if not card.ability.extra.usable then
+        card.ability.extra.usable = true
+        card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_reset')})
+      end
+    end
+  end,
+  keep_on_use = function(self, card)
+    return true
+  end,
+  in_pool = function(self)
+    local mega_poke = G.jokers and pokermon.find_card(function(joker) return joker.config.center.megas end)
+    return mega_poke
+  end,
+  add_to_deck = function(self, card, from_debuff)
+    if not from_debuff then card.ability.extra.used_on = nil end
+    card.ability.extra.usable = true
+  end,
+  remove_from_deck = function(self, card, from_debuff)
+    local target = pokermon.find_card(function(joker) return joker.config.center.rarity == "poke_mega" and joker.unique_val == card.ability.extra.used_on end)
+    if target then
+      local forced_key = pokermon.get_previous_evo(target, true)
+      pokermon.evolve(target, forced_key)
+    end
+  end,
+}
+
+local obituary = {
+  name = "obituary",
+  key = "obituary",
+  set = "Spectral",
+  config = {extra = "Pink", max_highlighted = 1},
+  loc_vars = function(self, info_queue, center)
+    info_queue[#info_queue+1] = {key = 'poke_pink_seal_seal', set = 'Other'}
+  end,
+  pos = { x = 1, y = 4 },
+  atlas = "AtlasConsumablesBasic",
+  cost = 4,
+  unlocked = true,
+  discovered = true,
+  use = function(self, card)
+    local conv_card = G.hand.highlighted[1]
+    G.E_MANAGER:add_event(Event({func = function()
+      play_sound('tarot1')
+      return true end }))
+    
+    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+        conv_card:set_seal("poke_pink_seal", nil, true)
+        return true end }))
+    
+    delay(0.5)
+    pokermon.unhighlight_cards()
+  end,
+}
+
+local revenant = {
+  name = "revenant",
+  key = "revenant",
+  set = "Spectral",
+  config = {extra = "Silver", max_highlighted = 1},
+  loc_vars = function(self, info_queue, center)
+    info_queue[#info_queue+1] = {key = 'poke_silver_seal', set = 'Other'}
+  end,
+  pos = { x = 2, y = 5 },
+  atlas = "AtlasConsumablesBasic",
+  cost = 4,
+  unlocked = true,
+  discovered = true,
+  use = function(self, card)
+    local conv_card = G.hand.highlighted[1]
+    G.E_MANAGER:add_event(Event({func = function()
+      play_sound('tarot1')
+      return true end }))
+    
+    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+        conv_card:set_seal("poke_silver", nil, true)
+        return true end }))
+    
+    delay(0.5)
+    pokermon.unhighlight_cards()
+  end,
+}
+
+local nightmare = {
+  name = "nightmare",
+  key = "nightmare",
+  set = "Spectral",
+  loc_vars = function(self, info_queue, center)
+    info_queue[#info_queue+1] = {key = 'e_negative_consumable', set = 'Edition', config = {extra = 1}}
+  end,
+  pos = { x = 0, y = 4 },
+  atlas = "AtlasConsumablesBasic",
+  cost = 3,
+  unlocked = true,
+  discovered = true,
+  use = function(self, card)
+    local choice = pokermon.find_leftmost_or_highlighted()
+    if choice then
+      local energy = pokermon.energy.get_matching_energy(choice, true) or "c_poke_colorless_energy"
+      if energy then
+        local max = (energy == "c_poke_bird_energy") and 1 or 2
+        for _ = 1, max do
+          local _card = SMODS.add_card({set = "poke_energy", area = G.consumeables, key = energy, skip_materialize = true, soulable = true})
+          _card:set_edition({negative = true}, true)
+        end
+      end
+      SMODS.destroy_cards(choice)
+    end
+  end,
+  can_use = function(self, card)
+    local choice = pokermon.find_leftmost_or_highlighted()
+    return choice and not choice.ability.eternal
+  end,
+}
+
+local list = {obituary, revenant, nightmare, transformation, megastone}
+
+return {name = "AtlasConsumablesBasic 2",
+        list = list
+}

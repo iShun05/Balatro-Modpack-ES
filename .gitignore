@@ -1,0 +1,6 @@
+.DS_Store
+._*
+dist/
+Mods/lovely/dump/
+Mods/lovely/log/
+Mods/lovely/game-dump/

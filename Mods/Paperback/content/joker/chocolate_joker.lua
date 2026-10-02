@@ -1,0 +1,58 @@
+SMODS.Joker {
+  key = 'chocolate_joker',
+  config = {
+    extra = {
+      a_xchips = 0.2,
+    }
+  },
+  rarity = 2,
+  pos = { x = 19, y = 4 },
+  atlas = 'jokers_atlas',
+  cost = 8,
+  unlocked = true,
+  discovered = false,
+  blueprint_compat = true,
+  eternal_compat = true,
+  soul_pos = nil,
+  paperback_credit = {
+    coder = { 'dowfrin' },
+  },
+
+  loc_vars = function(self, info_queue, card)
+    local xchips
+    if G.jokers then xchips = 1 + (#G.jokers.cards * card.ability.extra.a_xchips) end
+    return {
+      vars = {
+        card.ability.extra.a_xchips,
+        xchips or 1
+      }
+    }
+  end,
+
+  calculate = function(self, card, context)
+    if context.joker_main then
+      return {
+        xchips = 1 + (#G.jokers.cards * card.ability.extra.a_xchips)
+      }
+    end
+  end,
+
+  joker_display_def = function(JokerDisplay)
+    return {
+      text = {
+        {
+          border_nodes = {
+            { text = "X" },
+            { ref_table = "card.joker_display_values", ref_value = "xchips", retrigger_type = "exp" }
+          },
+          border_colour = G.C.CHIPS
+        }
+      },
+      calc_function = function(card)
+        local xchips = 1
+        if G.jokers then xchips = 1 + (#G.jokers.cards * card.ability.extra.a_xchips) end
+        card.joker_display_values.xchips = xchips
+      end
+    }
+  end,
+}

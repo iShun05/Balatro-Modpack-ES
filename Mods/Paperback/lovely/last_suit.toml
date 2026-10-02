@@ -1,0 +1,20 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "if splashed and not unsplashed then table.insert(final_scoring_hand, G.play.cards[i]) end"
+position = "after"
+match_indent = true
+payload = '''
+  G.GAME.paperback.hand_contained_crown = false
+  for k, v in ipairs(final_scoring_hand) do
+    if not SMODS.has_no_suit(v) then
+      G.GAME.paperback.last_scored_suit = v.base.suit
+      G.GAME.paperback.hand_contained_crown = G.GAME.paperback.hand_contained_crown or SMODS.has_any_suit(v) or (v.base.suit == "paperback_Crowns")
+    end
+  end
+'''

@@ -1,0 +1,103 @@
+SMODS.Shader {
+  key = 'dichrome',
+  path = 'dichrome.fs'
+}
+
+SMODS.Sound {
+  key = 'dichrome',
+  path = 'dichrome.ogg'
+}
+
+SMODS.Edition {
+  key = 'dichrome',
+  shader = 'dichrome',
+  config = {
+    amount = 1
+  },
+  sound = {
+    sound = 'paperback_dichrome',
+    per = 1,
+    vol = 0.4
+  },
+  discovered = false,
+  weight = 3,     -- As rare as polychrome
+  in_shop = true,
+  extra_cost = 5, -- As expensive as polychrome
+
+  loc_vars = function(self, info_queue, card)
+    return {
+      key = card.playing_card and 'e_paperback_dichrome_playing_card',
+      vars = {
+        (card.edition or {}).amount or self.config.amount
+      }
+    }
+  end,
+
+  calculate = function(self, card, context)
+    local should_trigger = (context.setting_blind and card.ability.set == 'Joker')
+        or (context.hand_drawn and card.playing_card)
+
+    -- Checks whether this card was one of the drawn cards
+    if should_trigger and context.hand_drawn then
+      should_trigger = false
+
+      for _, v in ipairs(context.hand_drawn) do
+        if v == card then
+          should_trigger = true
+          break
+        end
+      end
+    end
+
+    if should_trigger then
+      local amount = card.edition.amount or self.config.amount
+      G.E_MANAGER:add_event(Event {
+        trigger = 'after',
+        delay = 1,
+        func = function()
+          local res = PB_UTIL.get_lowest_hand_discard()
+          -- Pick hands over discards
+          local func = res.hands and ease_hands_played or ease_discard
+          local message = res.hands and 'a_hands' or 'paperback_a_discards'
+
+          func(amount, true)
+
+          SMODS.calculate_effect({
+            message = localize {
+              type = 'variable',
+              key = message .. (res.amt < 0 and '_minus' or ''),
+              vars = { amount }
+            },
+            colour = res.hands and G.C.CHIPS or G.C.MULT,
+            instant = true
+          }, card)
+          return true
+        end
+      })
+    end
+  end
+}
+
+-- Prevent Dichrome edition being added to non-jokers
+local poll_edition_ref = poll_edition
+function poll_edition(_key, _mod, _no_neg, _guaranteed, _options)
+  local removed, pos
+
+  if _no_neg then
+    for i, v in ipairs(G.P_CENTER_POOLS.Edition) do
+      if v.key == 'e_paperback_dichrome' then
+        pos = i
+        removed = table.remove(G.P_CENTER_POOLS.Edition, i)
+        break
+      end
+    end
+  end
+
+  local ret = poll_edition_ref(_key, _mod, _no_neg, _guaranteed, _options)
+
+  if _no_neg and removed and pos then
+    table.insert(G.P_CENTER_POOLS.Edition, pos, removed)
+  end
+
+  return ret
+end

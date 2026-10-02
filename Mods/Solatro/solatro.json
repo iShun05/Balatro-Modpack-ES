@@ -1,0 +1,11 @@
+{
+    "id": "Solatro",
+    "name": "Solatro",
+    "display_name": "Solatro",
+    "author": ["bryanthaboi", "bois club games"],
+    "description": "A full game of Klondike Solitaire on the main menu, built from Balatro's own cards. Drag cards or runs, or pick a card up with a click and click again to place it. Double click sends cards to their foundation. Classic victory cascade included.",
+    "prefix": "solatro",
+    "main_file": "solatro.lua",
+    "version": "1.0.0",
+    "badge_colour": "eac058"
+}

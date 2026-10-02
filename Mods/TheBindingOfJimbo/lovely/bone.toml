@@ -1,0 +1,28 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Custom shatter sound
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+pattern = '''elseif card.destroyed then'''
+position = 'before'
+match_indent = true
+payload = '''
+elseif card.destroyed and SMODS.has_enhancement(card, "m_tboj_bone") then
+  return card:tboj_bone_break() ~= false
+'''
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''else
+                        cards_destroyed[i]:start_dissolve()'''
+position = 'before'
+match_indent = true
+payload = '''
+elseif SMODS.has_enhancement(cards_destroyed[i], "m_tboj_bone") then
+  cards_destroyed[i]:tboj_bone_break()
+'''

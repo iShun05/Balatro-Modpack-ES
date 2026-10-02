@@ -1,0 +1,156 @@
+-- Flat File
+-- Telescope Lens
+TBOJ.Trinket {
+  key = "telescope_lens",
+  pos = { x = 1, y = 10 },
+  cost = 4,
+  config = {extra = {}},
+  loc_vars = function(self, info_queue, card)
+  end,
+  attributes = {"space"}
+}
+
+-- Mom's Lock
+-- Dice Bag
+TBOJ.Trinket {
+  key = "dice_bag",
+  pos = { x = 3, y = 10 },
+  cost = 6,
+  config = {extra = {num = 1, den = 2, cursed = 1}},
+  loc_vars = function(self, info_queue, card)
+    if not card.edition or (card.edition and not card.edition.negative) then
+      info_queue[#info_queue+1] = G.P_CENTERS.e_negative
+    end
+    info_queue[#info_queue+1] = {set = 'Other', key = 'tboj_cursed', vars = {card.ability.extra.cursed, card.ability.extra.cursed > 1 and "s" or "", card.ability.extra.cursed}}
+    local num, den = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.den, "tboj_dice_bag")
+    return {vars = {num, den, card.ability.extra.cursed}}
+  end,
+  calculate = function(self, card, context)
+    if context.end_of_round and context.game_over == false and context.main_eval and SMODS.pseudorandom_probability(card, "tboj_dice_bag", card.ability.extra.num, card.ability.extra.den, "tboj_dice_bag") then
+      G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.4,
+        func = function()
+          local _card = SMODS.add_card { area = G.tboj_Actives, set = "tboj_Active", edition = "e_negative", key_append = "tboj_dice_bag", attributes = {"tboj_dice"} }
+          TBOJ.apply_cursed(_card, card.ability.extra.cursed)
+          SMODS.calculate_effect({message = localize('tboj_plus_dice'), colour = G.C.YELLOW}, _card)
+          card:juice_up(0.3, 0.5)
+          return true
+        end
+      }))
+    end
+  end,
+  attributes = {"generation"}
+}
+
+-- Holy Crown
+-- Mother's Kiss
+TBOJ.Trinket {
+  key = "mother_kiss",
+  pos = { x = 5, y = 10 },
+  cost = 4,
+  config = {extra = {hands = 1}},
+  loc_vars = function(self, info_queue, card)
+    return { vars = { card.ability.extra.hands } }
+  end,
+  add_to_deck = function(self, card, from_debuff)
+    G.GAME.round_resets.hands = G.GAME.round_resets.hands + card.ability.extra.hands
+    if not from_debuff then
+      ease_hands_played(card.ability.extra.hands)
+    end
+  end,
+  remove_from_deck = function(self, card, from_debuff)
+    G.GAME.round_resets.hands = G.GAME.round_resets.hands - card.ability.extra.hands
+    local to_decrease = math.min(G.GAME.current_round.hands_left - 1, card.ability.extra.hands)
+    if to_decrease > 0 then
+      ease_hands_played(-to_decrease)
+    end
+  end,
+  attributes = {"hands", "passive"}
+}
+
+-- Torn Card
+-- Torn Pocket
+
+-- Modelin Clay
+-- Polished Bone
+-- Hollow Heart
+TBOJ.Trinket {
+  key = "hollow_heart",
+  pos = { x = 2, y = 11 },
+  cost = 5,
+  config = {extra = {triggered = false}},
+  loc_vars = function(self, info_queue, card)
+    info_queue[#info_queue + 1] = G.P_CENTERS.m_tboj_bone
+    return { vars = {} }
+  end,
+  calculate = function(self, card, context)
+    if context.setting_blind then
+      card.ability.extra.triggered = false
+      local eval = function() return not card.ability.extra.triggered and not G.RESET_JIGGLES end
+      juice_card_until(card, eval, true)
+    end
+
+    if context.hand_drawn and not card.ability.extra.triggered then
+      for _, v in ipairs(context.hand_drawn) do
+        if v.config.center == G.P_CENTERS.c_base then
+          v:set_ability("m_tboj_bone")
+          card.ability.extra.triggered = true
+          G.E_MANAGER:add_event(Event({
+            func = function()
+              v:juice_up()
+              play_sound("tboj_bone_heart", nil, 0.5)
+              return true
+            end
+          }))
+          return nil, true
+        end
+      end
+    end
+
+    if context.end_of_round then
+      card.ability.extra.triggered = false
+    end
+  end,
+  attributes = {"enhancements", "modify_card"}
+}
+
+-- Kid's Drawing
+-- Crystal Key
+
+-- Strange Key
+-- Lil Clot
+-- Temporary Tattoo
+TBOJ.Trinket {
+  key = "temporary_tattoo",
+  pos = { x = 11, y = 11 },
+  cost = 5,
+  config = {extra = {}},
+  loc_vars = function(self, info_queue, card)
+    local tags = {'tag_ethereal', 'tag_standard', 'tag_meteor', 'tag_buffoon'}
+    local locs = {}
+    for _, v in ipairs(tags) do
+      locs[#locs+1] = localize({type = "name_text", set = "Tag", key = v})
+    end
+    info_queue[#info_queue+1] = {set = 'Other', key = 'tboj_temporary_tattoo_tag_pool', vars = locs}
+    return { vars = {} }
+  end,
+  calculate = function(self, card, context)
+    if context.end_of_round and context.beat_boss and context.game_over == false and context.main_eval then
+      local tags = {'tag_standard', 'tag_meteor', 'tag_buffoon'}
+      local tag = ''
+      if pseudorandom('tboj_temporary_tattoo_ethereal') < 1/#tags*2 then
+        tag = 'tag_ethereal'
+      else
+        tag = pseudorandom_element(tags,('tboj_temporary_tattoo'))
+      end
+      add_tag(Tag(tag))
+      play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+      play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+    end
+  end,
+  attributes = {"tag", "generation", "boss_blind"}
+}
+
+-- Swallowed M80
+-- RC Remote

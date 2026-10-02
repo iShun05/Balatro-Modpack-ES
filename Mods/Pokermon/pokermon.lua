@@ -1,0 +1,417 @@
+if SMODS.current_mod then
+  local loaded, config = pcall(require, "pokermon.setup")
+  if not loaded then
+      error("Pokermon did not load correctly. Please make sure the Pokermon folder isn't nested within the Mods folder and that you have everything installed properly.")
+  end
+end
+
+pokermon = { energy = {}, ui = {}, sprites = {} }
+SMODS.current_mod.optional_features = { quantum_enhancements = true, object_weights = true }
+
+--Undiscovered sprites, mostly for testing some localization things since the game crashes without them
+--This can probably have a better integration or just be removed altogether since everything is discovered anyways
+-- -Jevonn
+SMODS.UndiscoveredSprite({
+	key = "Energy",
+	atlas = "unergy",
+	path = "unergy.png",
+	pos = { x = 0, y = 0 },
+	px = 71,
+	py = 95,
+}):register()
+SMODS.UndiscoveredSprite({
+	key = "Item",
+	atlas = "unitem",
+	path = "unitem.png",
+	pos = { x = 0, y = 0 },
+	px = 71,
+	py = 95,
+}):register()
+
+--Get mod path and load other files
+local mod_dir = ''..SMODS.current_mod.path
+pokermon_config = SMODS.current_mod.config
+
+--Load Joker Display if the mod is enabled
+if (SMODS.Mods["JokerDisplay"] or {}).can_load then
+  local jokerdisplays = NFS.getDirectoryItems(mod_dir.."jokerdisplay")
+
+  for _, file in ipairs(jokerdisplays) do
+    sendDebugMessage ("The file is: "..file)
+    local helper, load_error = SMODS.load_file("jokerdisplay/"..file)
+    if not helper then
+      sendDebugMessage ("The error is: "..load_error)
+    else
+      helper()
+    end
+  end
+end
+
+--Load Custom Rarities
+SMODS.Rarity{
+    key = "safari",
+    default_weight = 0,
+    badge_colour = HEX("F2C74E"),
+    pools = {["Joker"] = true},
+    get_weight = function(self, weight, object_type)
+        return weight
+    end,
+}
+SMODS.Rarity{
+    key = "mega",
+    default_weight = 0,
+     -- color from bulbapedia (effect color around Mega Blaziken artwork: https://bulbapedia.bulbagarden.net/wiki/File:Blaziken_Mega_Evolution.png)
+    badge_colour = HEX("E8578E"),
+    pools = {["Joker"] = true},
+    get_weight = function(self, weight, object_type)
+        return weight
+    end,
+}
+
+--Load helper function files
+assert(SMODS.load_file("functions/pokeconstants.lua"))()
+assert(SMODS.load_file("functions/pokefunctions.lua"))()
+assert(SMODS.load_file("functions/energyfunctions.lua"))()
+assert(SMODS.load_file("functions/pokeutils.lua"))()
+assert(SMODS.load_file("functions/pokefamily.lua"))()
+assert(SMODS.load_file("functions/dex_order.lua"))()
+assert(SMODS.load_file("functions/uifunctions.lua"))()
+
+--Load Draw Logic file
+assert(SMODS.load_file("functions/pokedraw.lua"))()
+
+--Load Debuff logic
+assert(SMODS.load_file("functions/debufffunctions.lua"))()
+
+--Load API
+assert(SMODS.load_file("functions/apifunctions.lua"))()
+
+--Load Sprites Load
+assert(SMODS.load_file("functions/pokespriteload.lua"))()
+
+--Load Sprites file
+assert(SMODS.load_file("pokesprites.lua"))()
+
+--Load InputManager file
+assert(SMODS.load_file("functions/inputmanager.lua"))()
+
+--Load DisplayCard file
+assert(SMODS.load_file("functions/displaycard.lua"))()
+
+--Load UI file
+assert(SMODS.load_file("pokeui.lua"))()
+
+--Load quip file
+assert(SMODS.load_file("pokequips.lua"))()
+
+--Load backwards compat file
+assert(SMODS.load_file("functions/pokecompat.lua"))()
+
+local load_directory = function(dirname, map_item, auto_discovery)
+  local pfiles = NFS.getDirectoryItems(mod_dir .. dirname)
+
+  for _, file in ipairs(pfiles) do
+    sendDebugMessage ("The file is: "..file)
+    local result, load_error = SMODS.load_file(dirname .. "/" ..file)
+    if not result then
+      sendDebugMessage ("The error is: "..load_error)
+    else
+      local items = result()
+      if items.init then items:init() end
+
+      if items.list and #items.list > 0 then
+        for _, item in ipairs(items.list) do
+          if auto_discovery and not item.poke_always_unlocked then
+            item.discovered = not pokermon_config.pokemon_discovery
+          end
+          map_item(item)
+        end
+      end
+    end
+  end
+end
+
+--Load pokemon file
+load_directory("pokemon", pokermon.load_pokemon)
+
+--This is a new comment
+----Don't believe his lies
+
+--Load consumable types
+load_directory("consumable types", SMODS.ConsumableType, true)
+
+--Load consumables
+load_directory("consumables", SMODS.Consumable, true)
+
+--Load boosters
+load_directory("boosters", SMODS.Booster, true)
+
+--Load seals
+load_directory("seals", SMODS.Seal, true)
+
+--Load stickers
+load_directory("stickers", function (item)
+  item.hide_badge = true
+  SMODS.Sticker(item)
+end, true)
+
+-- Sets custom skins according to config on load
+G.E_MANAGER:add_event(Event({
+  func = function()
+    G.FUNCS.poke_toggle_pokermon_skins()
+	  return true
+  end
+}))
+
+--Load editions
+load_directory("editions", SMODS.Edition, true)
+
+--Load enhancements
+load_directory("enhancements", SMODS.Enhancement, true)
+
+--Load vouchers
+load_directory("vouchers", SMODS.Voucher, true)
+
+--Load blinds
+load_directory("blinds", SMODS.Blind, true)
+
+--Load stakes
+load_directory("stakes", SMODS.Stake, true)
+
+--Load tags
+load_directory("tags", SMODS.Tag, true)
+
+--Load backs
+load_directory("backs", SMODS.Back)
+
+--Load Sleeves
+if (SMODS.Mods["CardSleeves"] or {}).can_load then
+  --Load Sleeves
+  load_directory("sleeves", CardSleeves.Sleeve)
+end
+
+--Load challenges file
+load_directory("challenges", SMODS.Challenge)
+
+
+local set_edition = Card.set_edition
+function Card:set_edition(edition, immediate, silent)
+  if (edition and edition == "e_poke_shiny" and not pokermon_config.shiny_playing_cards) and (self.ability.set ~= 'Joker' and self.ability.set ~= 'Edition') then return end
+  return set_edition(self, edition, immediate, silent)
+end
+
+
+--Add Jirachi's Negative rate increase
+
+local previous_neg_get_weight = G.P_CENTERS.e_negative.get_weight
+G.P_CENTERS.e_negative.get_weight = function(self)
+  return previous_neg_get_weight(self) + ((G.GAME.poke_negative_edition_rate or 1) - 1) * G.P_CENTERS.e_negative.weight
+end
+
+-- polychrome steals negative's chances with the Hone / Glow Up voucher, so we're gonna steal it back (won't decrease past base weight)
+local previous_poly_get_weight = G.P_CENTERS.e_polychrome.get_weight
+G.P_CENTERS.e_polychrome.get_weight = function(self)
+  return math.max(G.P_CENTERS.e_polychrome.weight, previous_poly_get_weight(self) - ((G.GAME.poke_negative_edition_rate or 1) - 1) * G.P_CENTERS.e_negative.weight)
+end
+
+--To support Debris sleeve combo
+local card_set_ability_old = Card.set_ability
+function Card:set_ability(center, initial, delay_sprites)
+  if G.GAME.modifiers.poke_negative_hazards and self.config.center and self.config.center.key == "m_poke_hazard" and self.ability and self.ability.card_limit then
+      self.ability.card_limit = self.ability.card_limit - 1
+  end
+  local ret = card_set_ability_old(self, center, initial, delay_sprites)
+  if G.GAME.modifiers.poke_negative_hazards and self.config.center and self.config.center.key == "m_poke_hazard" then
+      if not self.ability then self.ability = {} end
+      self.ability.card_limit = (self.ability.card_limit or 0) + 1
+  end
+  return ret
+end
+
+-- Changing these vouchers to increase interest cap rather than hard setting it
+SMODS.Voucher:take_ownership('seed_money', {
+  redeem = function(self, card)
+    G.E_MANAGER:add_event(Event({
+      func = function()
+          G.GAME.interest_cap = G.GAME.interest_cap + 25
+          return true
+      end
+    }))
+  end
+}, true)
+SMODS.Voucher:take_ownership('money_tree', {
+  redeem = function(self, card)
+    G.E_MANAGER:add_event(Event({
+      func = function()
+          G.GAME.interest_cap = G.GAME.interest_cap + 50
+          return true
+      end
+    }))
+  end
+}, true)
+
+function SMODS.current_mod.reset_game_globals(run_start)
+  if run_start then
+    if G.GAME.modifiers.poke_no_energy then
+      G.GAME.poke_energy_rate = 0
+    end
+  end
+
+  local rank_resets = {'bulb1card', 'sneaselcard', 'bramblincard', 'wingullcard'}
+  for i = 1, #rank_resets do
+    pokermon.reset_rank(rank_resets[i])
+  end
+  pokermon.reset_bronzo_card()
+  pokermon.reset_espeon_suit()
+  pokermon.reset_gligar_suit()
+  
+  pokermon.reset_type('cattype', {'skitty', 'delcatty'})
+end
+
+function SMODS.current_mod.calculate(self, context)
+  -- Poliwag line suit
+  if context.after then
+    pokermon.change_poli_suit()
+  end
+  -- Vending deck
+  if G.GAME.modifiers.poke_vending == true then
+    if context and context.round_eval and G.GAME.last_blind and G.GAME.last_blind.boss and ((G.GAME.round_resets.ante - 1) % 2 == 1) then
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                add_tag(Tag('tag_voucher'))
+                play_sound('generic1', 0.9 + math.random() * 0.1, 0.8)
+                play_sound('holo1', 1.2 + math.random() * 0.1, 0.4)
+                return true
+            end
+        }))
+    end
+  end
+  --Hazard level
+  if context.first_hand_drawn then
+    if G.GAME.poke_hazard_level and G.GAME.poke_hazard_level > 0 then
+      local hazards = math.min(G.GAME.poke_hazard_max or 3, G.GAME.poke_hazard_level)
+      G.E_MANAGER:add_event(Event({
+          trigger = 'before',
+          delay = 0.4,
+          func = function()
+            pokermon.add_hazards(nil, hazards, G.hand)
+            return true
+          end
+      }))
+    end
+  end
+  --Garbodor
+  if context.end_of_round and context.game_over == false and context.main_eval and context.beat_boss == true then
+    G.GAME.poke_ante_discards_used = 0
+    G.GAME.poke_lucky_triggers = 0
+  end
+  if context.pre_discard and not context.hook then
+    G.GAME.poke_ante_discards_used = (G.GAME.poke_ante_discards_used or 0) + 1
+  end
+  
+  --Leafeon
+  if context.individual and context.cardarea == G.play and context.other_card.lucky_trigger then
+    G.GAME.poke_lucky_triggers = (G.GAME.poke_lucky_triggers or 0) + 1
+  end
+  if context.end_of_round and context.main_eval then
+    G.GAME.poke_lucky_triggers = 0
+  end
+
+  --Revive fainted Jokers (MP Fix)
+  if context.round_eval then
+    for _, area in ipairs(SMODS.get_card_areas('jokers')) do
+      for _, joker in ipairs(area.cards) do
+        joker.ability.fainted = nil
+      end
+    end
+  end
+
+  if context.modify_weights then
+    pokermon.modify_pool(context.pool)
+  end
+  
+  --Imposter Syndrome challenge
+  if G.GAME.modifiers.poke_noncolorless and context.debuff_card and context.debuff_card.area == G.jokers and not pokermon.is_type(context.debuff_card, "Colorless") then
+    return {
+        debuff = true
+    }
+  end
+  
+  if G.GAME.modifiers.poke_add_ditto and context.end_of_round and context.game_over == false and context.main_eval and context.beat_boss then
+    if (#G.jokers.cards + G.GAME.joker_buffer) < G.jokers.config.card_limit then
+      G.GAME.joker_buffer = G.GAME.joker_buffer + 1
+      G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.2,
+        func = function()
+          G.GAME.joker_buffer = 0
+          play_sound('timpani')
+          SMODS.add_card({set = 'Joker', key = 'j_poke_ditto', no_edition = true})
+          return true
+        end
+      }))
+    end
+  end
+  
+  --Mean Look challenge
+  if context.debuff_hand and G.GAME.modifiers.poke_unforeseen_hand then
+    local text,disp_text,poker_hands = G.FUNCS.get_poker_hand_info(G.poke_scry_view.cards)
+    
+    if next(poker_hands[context.scoring_name]) then
+      return {
+        debuff = true,
+        debuff_text = localize{type = 'variable', key = 'poke_unforeseen_debuff', vars = {context.scoring_name}}
+      }
+    end
+  end
+end
+
+local old_end = end_round
+function end_round()
+  old_end()
+  G.E_MANAGER:add_event(Event({
+    trigger = 'after',
+    delay = 0.2,
+    func = function()
+      SMODS.calculate_context({evolution = true})
+      return true
+    end
+  }))
+
+end
+
+local is_showdown_ante_ref = SMODS.is_showdown_ante
+function SMODS.is_showdown_ante(...)
+  return (G.GAME.modifiers.poke_elite4
+        and G.GAME.round_resets.ante > 0
+        and G.GAME.round_resets.ante % G.GAME.win_ante >= G.GAME.win_ante - 3)
+      or is_showdown_ante_ref(...)
+end
+
+function SMODS.current_mod.menu_cards()
+  local shiny = pseudorandom('poke_shiny_menu_card') < 1 / 4096
+
+  local sprite_info = PokemonSprites['unown']
+  local atlas_prefix = pokermon.sprites.get_atlas_prefix('unown', sprite_info)
+
+  local atlas = 'poke_' .. atlas_prefix .. 'TitleCard'
+
+  if not SMODS.get_atlas(atlas) then
+    atlas = 'poke_AtlasJokersBasicTitleCard'
+  end
+
+  local y = shiny and 1 or 0
+
+  return {
+    {
+      poke_display_card_args = {
+        atlas = atlas,
+        pos = { x = 0, y = y },
+        soul_pos = { x = 1, y = y },
+        shader = shiny and 'poke_shiny',
+        soul_shader = shiny and 'poke_shiny',
+      }
+    },
+    remove_original = true,
+  }
+end

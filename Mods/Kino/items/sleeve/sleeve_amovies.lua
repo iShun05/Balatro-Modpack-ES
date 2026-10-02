@@ -1,0 +1,568 @@
+if CardSleeves then
+    CardSleeves.Sleeve {
+        key = "videostore",
+        atlas = "kino_sleeves",
+        pos = { x = 2, y = 3},
+        config = {
+            factor = 2
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_videostore" then
+                key = self.key .. "_alt"
+                vars = { self.config.factor * self.config.factor }
+            else
+                key = self.key
+                vars = { self.config.kino_bonus }
+            end
+            return { key = key, vars = vars }
+        end,
+        calculate = function(self, card, context)
+            if context.modify_weights then
+                for _, _object in ipairs(context.pool) do
+                    local _center = G.P_CENTERS[_object.key]
+                    if _center and _center.original_mod and _center.original_mod.id == "Kino" then
+                        _object.weight = _object.weight * card.effect.center.config.factor
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_videostore", stake = "stake_black" },
+    }
+
+    -- Bacon
+    CardSleeves.Sleeve {
+        key = "bacon",
+        atlas = "kino_sleeves",
+        pos = { x = 0, y = 1 },
+        config = {
+            bacon_bonus = 1.5
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_bacon" then
+                key = self.key .. "_alt"
+                self.config = { bacon_bonus = 2 }
+                vars = { (self.config.bacon_bonus - 1) * 100 }
+            else
+                key = self.key
+                self.config = { bacon_bonus = 1.5 }
+                vars = { (self.config.bacon_bonus - 1) * 100 }
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function(self, sleeve)
+            G.GAME.modifiers.bacon_bonus = self.config.bacon_bonus
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_bacon", stake = "stake_black" },
+    }
+
+    -- Cine2Nerdle
+    CardSleeves.Sleeve {
+        key = "c2n",
+        atlas = "kino_sleeves",
+        pos = { x = 2, y = 1 },
+        config = {
+            factor = 4
+        },
+        loc_vars = function(self, info_queue, card)
+            local _return = self.config.factor
+            if self.get_current_deck_key() == "b_kino_c2n" then
+                _return = _return * self.config.factor
+            end
+            return {
+                vars = {
+                    _return
+                }
+            }
+        end,
+        calculate = function(self, card, context)
+            if context.modify_weights then
+                if G.jokers and #G.jokers.cards > 0 then
+                    local _castlist = create_cast_list()
+
+                    if _castlist then
+                        for _, _object in ipairs(context.pool) do
+                            local _center = G.P_CENTERS[_object.key]
+                            if _center and _center.original_mod and _center.original_mod.id == "Kino" and has_cast_from_table(_center, _castlist) then
+                                _object.weight = _object.weight * card.effect.center.config.factor
+                            end
+                        end
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_c2n", stake = "stake_black" },
+    }
+
+    -- Producer 
+    CardSleeves.Sleeve {
+        key = "producer",
+        atlas = "kino_sleeves",
+        pos = { x = 3, y = 1 },
+        config = {
+            dollars = 6,
+            extra_hand_bonus = 0,
+            extra_discard_bonus = 0,
+            no_interest = true
+        },
+        apply = function()
+            G.GAME.modifiers.no_blind_reward = G.GAME.modifiers.no_blind_reward or {}
+            G.GAME.modifiers.no_blind_reward.Small = true
+            G.GAME.modifiers.no_blind_reward.Big = true
+            G.GAME.modifiers.no_blind_reward.Boss = true
+        end,
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_producer" then
+                key = self.key .. "_alt"
+                vars = {}
+            else
+                key = self.key
+                vars = {}
+            end
+            return { key = key, vars = vars }
+        end,
+        calculate = function(self, card, context)
+            if context.end_of_round
+            and not context.individual and not context.repetition and not context.blueprint then
+                if self.get_current_deck_key() == "b_kino_producer" or
+                G.GAME.blind.boss then
+                    local _percentage = 0
+                    local _kino_jokercount = 0
+
+                    for _, _joker in ipairs(G.jokers.cards) do
+                        
+                        if _joker.config.center.kino_joker then
+                            _kino_jokercount = _kino_jokercount + 1
+                            local _movie_info = _joker.config.center.kino_joker 
+
+                            local budget = _movie_info.budget
+                            local boxoffice = _movie_info.box_office
+
+                            if budget == 0 then budget = 1 end
+                            if boxoffice == 0 then boxoffice = 1.1 end
+
+                            _percentage = _percentage + (boxoffice / budget)
+                            if _percentage > 10 then
+                                _percentage = 10
+                            end
+
+                            SMODS.calculate_effect({
+                                message = "%" .. (_percentage * 100),
+                                colour = G.C.MONEY
+                            },
+                            _joker)
+                        end
+                    end
+
+                    if _kino_jokercount > 0 then
+                        local reward = 10 * _percentage
+
+                        ease_dollars(reward - 10)
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_producer", stake = "stake_black" },
+    }
+
+    -- Investment
+    CardSleeves.Sleeve {
+        key = "investment",
+        atlas = "kino_sleeves",
+        pos = { x = 2, y = 2},
+        config = {
+            dollars = 6,
+            extra_hand_bonus = 0,
+            extra_discard_bonus = 0,
+            no_interest = true
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_investment" then
+                key = self.key .. "_alt"
+                vars = {}
+            else
+                key = self.key
+                vars = {}
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function()
+            G.GAME.modifiers.no_blind_reward = G.GAME.modifiers.no_blind_reward or {}
+            G.GAME.modifiers.no_blind_reward.Small = true
+            G.GAME.modifiers.no_blind_reward.Big = true
+            G.GAME.modifiers.no_blind_reward.Boss = true
+        end,
+        calculate = function(self, card, context)
+            if context.end_of_round
+            and not context.individual and not context.repetition and not context.blueprint then
+                if self.get_current_deck_key() == "b_kino_investment" then
+                    for _index, _pcard in ipairs(G.playing_cards) do
+                        -- Kino.change_counters(_pcard, "kino_investment", 1)
+                        _pcard:bb_counter_apply('counter_money', 1)
+                    end
+                else
+                    local _playbonus = 10
+
+                    for i = 1, _playbonus do
+                        local _target = pseudorandom_element(G.playing_cards, pseudoseed("kino_invdeck"))
+                        -- Kino.change_counters(_target, "kino_investment", 1)
+                        _target:bb_counter_apply('counter_money', 1)
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_investment", stake = "stake_black" },
+    }
+    
+
+    -- Spellslinger
+    CardSleeves.Sleeve {
+        key = "spellslinger",
+        atlas = "kino_sleeves",
+        pos = { x = 3, y = 2},
+        config = {
+            
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_spellslinger" then
+                key = self.key .. "_alt"
+                vars = {}
+            else
+                key = self.key
+                vars = {}
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function(self, sleeve)
+            G.GAME.starting_params.blockbuster_spellcasting_deck = true
+            if self.get_current_deck_key() == "b_kino_spellslinger" then
+                G.GAME.starting_params.kino_spellcasting_sleeve = true
+            end
+        end,
+        calculate = function(self, card, context)
+            if context.individual and context.cardarea == G.play and
+            context.scoring_hand[#context.scoring_hand] == context.other_card then
+                if #G.hand.cards > 2 then
+
+                    if self.get_current_deck_key() == "b_kino_spellslinger" then
+                        -- local _result = pick_spell_reverse(context.other_card, G.hand.cards)
+                        local _new_card_list = {}
+                        for i = 1, #G.hand.cards do
+                            _new_card_list[i] = G.hand.cards[#G.hand.cards + 1 - i]
+                        end
+
+                        local _result = Blockbuster.cast_spell_using_recipe(context.other_card, _new_card_list)
+                        return _result
+                    else
+                        local _result = Blockbuster.cast_spell_using_recipe(context.other_card, G.hand.cards)
+                        return _result
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_spellslinger", stake = "stake_black" },
+    }
+
+    -- Dark Knight
+    CardSleeves.Sleeve {
+        key = "darkknight",
+        atlas = "kino_sleeves",
+        pos = { x = 4, y = 2},
+        config = {
+            factor = 2
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_darkknight" then
+                key = self.key .. "_alt"
+                vars = {
+                    self.config.factor + self.config.factor
+                }
+            else
+                key = self.key
+                vars = {
+                    self.config.factor
+                }
+            end
+            return { key = key, vars = vars }
+        end,
+        calculate = function(self, card, context)
+            if context.modify_weights then
+                for _, _object in ipairs(context.pool) do
+                    local _center = G.P_CENTERS[_object.key]
+                    if _center and _center.attributes and _center.attributes["batman"] then
+                        _object.weight = _object.weight * card.effect.center.config.factor
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_darkknight", stake = "stake_black" },
+    }
+
+    -- Alderaan
+    CardSleeves.Sleeve {
+        key = "alderaan",
+        atlas = "kino_sleeves",
+        pos = { x = 2, y = 0},
+        config = {
+            factor = 2
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_alderaan" then
+                key = self.key .. "_alt"
+                vars = {
+                    self.config.factor + self.config.factor
+                }
+            else
+                key = self.key
+                vars = {
+                    self.config.factor
+                }
+            end
+            return { key = key, vars = vars }
+        end,
+        calculate = function(self, card, context)
+            -- When a round ends, level up a random hand for each remaining discard
+            if context.end_of_round
+            and not context.individual and not context.repetition and not context.blueprint then
+                local _count = G.GAME.current_round.discards_left + G.GAME.current_round.hands_left
+                
+                for i = 1, _count do
+                    local _hand = get_random_hand()
+                    SMODS.smart_level_up_hand(nil, _hand, nil, 1)
+                end
+            end
+
+            if context.modify_weights then
+                for _, _object in ipairs(context.pool) do
+                    local _center = G.P_CENTERS[_object.key]
+                    if _center and _center.attributes and _center.attributes["starwars"] then
+                        _object.weight = _object.weight * card.effect.center.config.factor
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_alderaan", stake = "stake_black" },
+    }
+
+    -- Cosmonaut
+    CardSleeves.Sleeve {
+        key = "cosmonaut",
+        atlas = "kino_sleeves",
+        pos = { x = 1, y = 0},
+        config = {
+            factor = 4
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_cosmonaut" then
+                key = self.key .. "_alt"
+                vars = {
+                    self.config.factor * self.config.factor
+                }
+            else
+                key = self.key
+                vars = {
+                    self.config.factor
+                }
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function()
+
+            G.GAME.modifiers.kino_cosmonaut = true
+        end,
+        calculate = function(self, card, context)
+            if context.modify_weights then
+                for _, _object in ipairs(context.pool) do
+                    local _center = G.P_CENTERS[_object.key]
+                    if _center and _center.set == "Planet" and _center.strange_planet then
+                        _object.weight = _object.weight * card.effect.center.config.factor
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_cosmonaut", stake = "stake_black" },
+    }
+
+    CardSleeves.Sleeve {
+        key = "empowered",
+        atlas = "kino_sleeves",
+        pos = { x = 3, y = 0},
+        config = {
+            
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_empowered" then
+                key = self.key .. "_alt"
+                vars = {}
+            else
+                key = self.key
+                vars = {}
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function(self, sleeve)
+            G.GAME.starting_params.kino_empowereddeck = true
+            if self.get_current_deck_key() == "b_kino_empowered" then
+                G.GAME.starting_params.kino_empoweredsleeve = true
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_empowered", stake = "stake_black" },
+    }
+    
+    
+    if not Kino_Cryptidcheck then
+        if kino_config.confection_mechanic then
+            CardSleeves.Sleeve {
+                key = "snackdeck",
+                atlas = "kino_sleeves",
+                pos = {x = 0, y = 2},
+                config = {
+                    vouchers = {
+                        "v_kino_special_treats",
+                        "v_kino_snackbag",
+                    }
+                },
+                -- Unlock Functions
+                unlocked = false,
+                unlock_condition = { deck = "b_kino_snackdeck", stake = "stake_black" },
+            }
+        end
+        CardSleeves.Sleeve {
+            key = "trophydeck",
+            atlas = "kino_sleeves",
+            pos = {x = 1, y = 2},
+            config = {
+                vouchers = {
+                    "v_kino_awardsbait",
+                    "v_kino_awardsshow",
+                }
+            },
+            -- Unlock Functions
+            unlocked = false,
+            unlock_condition = { deck = "b_kino_trophydeck", stake = "stake_black" },
+        }
+    else
+        if kino_config.confection_mechanic then
+            CardSleeves.Sleeve {
+                key = "snackdeck_cryptid",
+                atlas = "kino_sleeves",
+                pos = {x = 0, y = 2},
+                config = {
+                    vouchers = {
+                        "v_kino_special_treats",
+                        "v_kino_snackbag",
+                        "v_kino_heavenly_treats"
+                    }
+                },
+            -- Unlock Functions
+            unlocked = false,
+            unlock_condition = { deck = "b_kino_snackdeck_cryptid", stake = "stake_black" },    
+        }
+        end
+
+        CardSleeves.Sleeve {
+            key = "trophydeck_cryptid",
+            atlas = "kino_sleeves",
+            pos = {x = 1, y = 2},
+            config = {
+                vouchers = {
+                    "v_kino_awardsbait",
+                    "v_kino_awardsshow",
+                    "v_kino_egot"
+                }
+            },
+            -- Unlock Functions
+            unlocked = false,
+            unlock_condition = { deck = "b_kino_trophydeck_cryptid", stake = "stake_black" },
+        }
+    end
+
+    CardSleeves.Sleeve {
+        key = "deckthatmakesyouold",
+        atlas = "kino_sleeves",
+        pos = { x = 0, y = 0},
+        config = {
+            og_deck = false
+        },
+        loc_vars = function(self)
+            local key, vars
+            if self.get_current_deck_key() == "b_kino_deckthatmakesyouold" then
+                key = self.key .. "_alt"
+                self.config.og_deck = true
+                vars = {}
+            else
+                key = self.key
+                self.config.og_deck = false
+                vars = {}
+            end
+            return { key = key, vars = vars }
+        end,
+        apply = function(self, sleeve)
+            
+        end,
+        calculate = function(self, card, context)
+            if context.individual and context.cardarea == G.play then
+                for _index, _pcard in ipairs(G.hand.cards) do
+                    local _suits = SMODS.Suits
+                    for _suitname, _suitdata in pairs(_suits) do
+                        if (_pcard:is_suit(_suitname) and context.other_card:is_suit(_suitname)) or
+                        self.config.og_deck then
+                            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.1, func = function()
+                                _pcard:juice_up(0.8, 0.5)
+                                SMODS.modify_rank(_pcard, 1)
+                            return true end }))
+                            break
+                        end
+                    end
+                end
+            end
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_deckthatmakesyouold", stake = "stake_black" },
+    }
+
+    CardSleeves.Sleeve {
+        key = "northernlion",
+        atlas = "kino_sleeves",
+        pos = { x = 1, y = 1 },
+        config = {
+            egg_genre = "Romance"
+        },
+        
+        apply = function(self, sleeve)
+            G.GAME.modifiers.egg_genre = "Romance"
+        end,
+        -- Unlock Functions
+        unlocked = false,
+        unlock_condition = { deck = "b_kino_northernlion", stake = "stake_black" },
+    }
+end
