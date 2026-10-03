@@ -1,5 +1,11 @@
 # Historial de cambios — Balatro · Pack de mods en español
 
+## v0.4 — 2026-10-03
+- **El botón derecho del ratón vuelve a deseleccionar las cartas de la mano**, como en el Balatro normal. Causa: Handy asigna «Ratón derecho» a su «seleccionar rápido» (que se resuelve antes que «deseleccionar mano»), así que con el cursor sobre una carta el derecho seleccionaba otra carta. Se quita esa asignación en `config/Handy.jkr` (el izquierdo sigue seleccionando, también arrastrando).
+- Probado en el juego con clics reales: con 3 cartas seleccionadas, el derecho (sobre una carta o en vacío) deja 0; el izquierdo selecciona carta a carta. Antes: el derecho pasaba de 3 a 4.
+- `herramientas/empaquetar.sh`: ya no copia la lista negra de mods (`lovely/blacklist.txt`) del PC de quien empaqueta —con un pack aplicado habría desactivado mods a quien instalara el pack— y escribe siempre la lista limpia.
+- Archivos: `config/Handy.jkr` (nuevo), `herramientas/empaquetar.sh`, `README.md`.
+
 ## v0.3 — 2026-10-02
 - Incluye **Guía y Traducción ES v0.5**:
   - **Pantalla de error en español** que señala al mod culpable; con 1, 2 o 3 se desactiva ese mod (y sus dependientes) y el juego se reabre solo. Historial en `guiaes_cierres.log`.

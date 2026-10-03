@@ -22,3 +22,7 @@ Sustituye a Better Mouse and Gamepad (retirado: chocaban). Su español lo comple
 ## Traducción
 
 Textos traducidos al español por **Guía y Traducción ES** sin modificar los archivos de este mod.
+
+## Nota del pack
+
+El pack trae `config/Handy.jkr` con «seleccionar rápido» solo en el botón izquierdo del ratón. Así el **botón derecho deselecciona todas las cartas** como en el juego normal (por defecto Handy lo usaba también para seleccionar).

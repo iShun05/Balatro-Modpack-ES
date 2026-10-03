@@ -5,7 +5,7 @@ Pack de **30 mods de Balatro** traducidos y explicados en español, revisado par
 > [!NOTE]
 > **Aún por comprobar:** que en **Windows** el juego se reabra solo al aplicar un pack o al desactivar un mod desde la pantalla de error (en Mac está probado). Si no se abre, ábrelo tú desde Steam: los cambios ya están aplicados. Todos los packs (Calidad de vida, Balatro ampliado, Kino, Pokémon, Isaac, Ortalab y Cryptid) se han probado ya por separado con el bot sin cierres. Si el juego se cierra, la pantalla de error dice qué mod falló y te deja desactivarlo con una tecla.
 
-- **Versión actual del pack:** v0.3
+- **Versión actual del pack:** v0.4
 - **Plataformas:** Windows 10/11 y macOS (Apple Silicon e Intel), Balatro de Steam
 - **Base:** Steamodded 26.829.0 · Lovely 0.9.0 · Talisman 2.7 · Multiplayer 0.5.5
 
@@ -71,6 +71,9 @@ En el menú principal hay un botón **PACKS DE MODS** (también en *Mods → Gu�
 
 ### Perfiles guardados
 Marca una combinación, escribe un nombre (p. ej. «Con Marcos» o «Yo solo») y pulsa **GUARDAR COMBINACIÓN**. Los perfiles (hasta 6) aparecen arriba del selector: un clic los carga y la «x» los borra.
+
+## Ratón: el botón derecho deselecciona las cartas
+Handy trae por defecto «seleccionar rápido» con los dos botones del ratón, y con el cursor sobre una carta el botón derecho **seleccionaba** en vez de dejar todas las cartas sin seleccionar como en el Balatro normal. El pack lo deja como el juego original: **botón izquierdo = seleccionar (también arrastrando), botón derecho = deseleccionar todas**. Se aplica con `config/Handy.jkr`; si prefieres lo de Handy, cámbialo en Opciones → Handy.
 
 ## Si el juego se cierra
 La pantalla de error empieza ahora con una explicación en español: **qué mod ha fallado**, en qué archivo, qué significa el error y qué otros mods aparecen. Pulsa **1, 2 o 3** para desactivar ese mod (y los que dependen de él) y el juego se reabre solo; tu partida a medias se aparta para no cerrarse al continuar. **R** reabre sin cambios. Cada cierre queda anotado en `guiaes_cierres.log` (carpeta de datos de Balatro). Si se repite, mándame la pantalla por Instagram.
@@ -156,7 +159,7 @@ Balatro_Pack_ES/
 ├── Instalar_Windows.bat      # instalador de Windows (lanza windows/Instalar_Windows.ps1)
 ├── Instalar_Mac.command      # instalador de Mac
 ├── Mods/                     # los 30 mods ya editados (+ lovely/blacklist.txt)
-├── config/                   # ajustes compartidos de los mods (.jkr)
+├── config/                   # ajustes compartidos de los mods (.jkr); Handy.jkr = botón derecho deselecciona
 ├── windows/                  # Instalar_Windows.ps1 + version.dll (Lovely 0.9.0)
 ├── mac/                      # liblovely.dylib (Lovely 0.9.0) + run_lovely_macos.sh
 ├── docs/mods/                # ficha en español de cada mod
@@ -171,11 +174,12 @@ Borra la carpeta `Mods` (Windows: `%APPDATA%\Balatro\Mods`; Mac: `~/Library/Appl
 ## Versiones y código fuente
 | Versión | Fecha | Cambios | Código |
 |---|---|---|---|
-| [`v0.3`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.3) **(actual)** | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de mods en Multiplayer, perfiles de packs y todos los packs probados (Guía v0.5) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.3) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.3.zip) |
+| [`v0.4`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.4) **(actual)** | 2026-10-03 | El botón derecho del ratón vuelve a deseleccionar las cartas (ajuste de Handy) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.4) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.4.zip) |
+| [`v0.3`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.3) | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de mods en Multiplayer, perfiles de packs y todos los packs probados (Guía v0.5) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.3) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.3.zip) |
 | [`v0.2`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.2) | 2026-10-02 | Packs de mods combinables, menú principal centrado y más cierres corregidos (Guía v0.4) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.2) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.2.zip) |
 | [`v0.1`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.1) | 2026-10-02 | Primera versión: 30 mods en español, instaladores Windows/Mac, 6 cierres corregidos | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.1) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.1.zip) |
 
-Para volver a una versión: `git checkout v0.3`.
+Para volver a una versión: `git checkout v0.4`.
 
 ## Créditos
 Cada mod pertenece a sus autores (ver su ficha en `docs/mods/`). Este pack solo los reúne, traduce y corrige su compatibilidad.

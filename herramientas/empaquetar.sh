@@ -11,7 +11,8 @@ ORIGEN_MODS="${ORIGEN_MODS:-/Volumes/SanDisk/mods/Balatro}"
 ORIGEN_CFG="${ORIGEN_CFG:-$HOME/Library/Application Support/Balatro/config}"
 DIST="$RAIZ/dist"
 
-# Ajustes que se comparten (Multiplayer.jkr va aparte, ya limpio de datos personales)
+# Ajustes que se comparten. Multiplayer.jkr (limpio de datos personales) y Handy.jkr (botón
+# derecho = deseleccionar, como en el juego normal) se redactan a mano en config/ y no se copian.
 CONFIGS=(Bunco CardSleeves Cryptid JokerDisplay Pokermon Prism ScrDesc ShopUndo SixSuits
          Steamodded TheBindingOfJimbo cartomancer extracredit joker_evolution kino malverk
          ortalab paperback toomanyjokers)
@@ -20,12 +21,17 @@ echo "== Sincronizando Mods/"
 rsync -a --delete \
     --exclude '.git' --exclude '.github' --exclude '.DS_Store' --exclude '._*' \
     --exclude 'ZZ_*' --exclude '.lovelyignore' \
-    --exclude 'lovely/dump' --exclude 'lovely/log' --exclude 'lovely/game-dump' \
+    --exclude 'lovely/dump' --exclude 'lovely/log' --exclude 'lovely/game-dump' --exclude 'lovely/blacklist.txt' \
     "$ORIGEN_MODS/" "$RAIZ/Mods/"
+
+# La lista negra del PC de quien empaqueta (mods desactivados con un pack) no debe viajar:
+# el pack se entrega con todos los mods activos (solo FusionJokers, que no se incluye).
+mkdir -p "$RAIZ/Mods/lovely"
+printf 'FusionJokers\n' > "$RAIZ/Mods/lovely/blacklist.txt"
 
 echo "== Copiando ajustes"
 for c in "${CONFIGS[@]}"; do
-    cp "$ORIGEN_CFG/$c.jkr" "$RAIZ/config/$c.jkr"
+    [ -f "$ORIGEN_CFG/$c.jkr" ] && cp "$ORIGEN_CFG/$c.jkr" "$RAIZ/config/$c.jkr"
 done
 
 echo "== Creando ZIP en dist/"
