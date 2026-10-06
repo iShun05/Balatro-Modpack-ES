@@ -1,5 +1,15 @@
 # Historial de cambios — Balatro · Pack de mods en español
 
+## v0.5 — 2026-10-06
+### Corregido
+- **Cierre al cobrar con *Piggy Bank* (y otros 3 comodines por dinero).** Síntoma: al pulsar «Cobrar» al final de la ronda el juego se cerraba con `attempt to compare number with table`. Afectaba a *Piggy Bank*, la baratija *Counterfeit Penny* y el comodín de gasto en tienda de Repentance (The Binding of Jimbo) y a *Mint Condition* (Ortalab); con Talisman el importe del dinero llega como número grande.
+- **La pantalla de error nombraba un mod equivocado** (decía «Multiplayer» cuando el fallo era de The Binding of Jimbo): ahora señala el mod del propio mensaje de error.
+### Mejorado
+- `herramientas/empaquetar.sh` ya no copia los ajustes del PC de quien empaqueta (solo con `COPIAR_AJUSTES=1`), para que cambios personales no viajen en el pack.
+### Archivos y pruebas
+- Incluye **Guía y Traducción ES v0.6** (`Mods/GuiaTraduccionES`), `README.md`, `docs/mods/GuiaTraduccionES.md`.
+- Probado en el juego: *Piggy Bank* con una ganancia de dinero «grande» → sin cierre y el comodín sube su valor.
+
 ## v0.4 — 2026-10-03
 - **El botón derecho del ratón vuelve a deseleccionar las cartas de la mano**, como en el Balatro normal. Causa: Handy asigna «Ratón derecho» a su «seleccionar rápido» (que se resuelve antes que «deseleccionar mano»), así que con el cursor sobre una carta el derecho seleccionaba otra carta. Se quita esa asignación en `config/Handy.jkr` (el izquierdo sigue seleccionando, también arrastrando).
 - Probado en el juego con clics reales: con 3 cartas seleccionadas, el derecho (sobre una carta o en vacío) deja 0; el izquierdo selecciona carta a carta. Antes: el derecho pasaba de 3 a 4.

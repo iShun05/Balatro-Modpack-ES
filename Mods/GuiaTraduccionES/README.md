@@ -2,7 +2,7 @@
 
 Mod para Balatro (Steamodded) que **explica en español para qué sirve cada mod instalado**, recomienda qué mods activar y cómo combinarlos, y **traduce al español** todo lo que los demás mods dejaron en inglés, sin modificar sus archivos (las traducciones sobreviven a sus actualizaciones).
 
-- **Versión actual:** v0.5
+- **Versión actual:** v0.6
 - **Plataforma:** Balatro (macOS / Windows) con Steamodded ≥ 1.0.0 y Lovely
 
 ## Funciones principales
@@ -55,12 +55,13 @@ Cuando un mod se actualiza:
 2. Si editas un TSV: `python3 herramientas/generar.py`.
 3. Pon el juego en **Español (España)** y reinícialo.
 
-Para volver a una versión anterior: `git checkout v0.5`.
+Para volver a una versión anterior: `git checkout v0.6`.
 
 ## Versiones y código fuente
 | Versión | Fecha | Cambios | Código |
 |---|---|---|---|
-| [`v0.5`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.5) **(actual)** | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de Multiplayer, perfiles de packs y herramienta de traducciones | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.5) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.5.zip) |
+| [`v0.6`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.6) **(actual)** | 2026-10-06 | Corrige el cierre al cobrar con Piggy Bank (Talisman) y la pantalla de error que nombraba mal el mod | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.6) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.6.zip) |
+| [`v0.5`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.5) | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de Multiplayer, perfiles de packs y herramienta de traducciones | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.5) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.5.zip) |
 | [`v0.4`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.4) | 2026-10-02 | Menú principal centrado, packs de mods combinables y 4 cierres más corregidos | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.4) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.4.zip) |
 | [`v0.3`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.3) | 2026-10-02 | Rendimiento x30 al puntuar y más de 30 cierres del juego corregidos | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.3) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.3.zip) |
 | [`v0.2`](https://github.com/iShun05/GuiaTraduccionES-Balatro/releases/tag/v0.2) | 2026-10-02 | Recomendaciones, arreglo Fundas + Galdur, 9 mods nuevos traducidos | [Ver código](https://github.com/iShun05/GuiaTraduccionES-Balatro/tree/v0.2) · [ZIP](https://github.com/iShun05/GuiaTraduccionES-Balatro/archive/refs/tags/v0.2.zip) |

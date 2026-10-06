@@ -11,7 +11,7 @@ ORIGEN_MODS="${ORIGEN_MODS:-/Volumes/SanDisk/mods/Balatro}"
 ORIGEN_CFG="${ORIGEN_CFG:-$HOME/Library/Application Support/Balatro/config}"
 DIST="$RAIZ/dist"
 
-# Ajustes que se comparten. Multiplayer.jkr (limpio de datos personales) y Handy.jkr (botón
+# Ajustes que se pueden refrescar desde este PC. Multiplayer.jkr (limpio de datos personales) y Handy.jkr (botón
 # derecho = deseleccionar, como en el juego normal) se redactan a mano en config/ y no se copian.
 CONFIGS=(Bunco CardSleeves Cryptid JokerDisplay Pokermon Prism ScrDesc ShopUndo SixSuits
          Steamodded TheBindingOfJimbo cartomancer extracredit joker_evolution kino malverk
@@ -29,10 +29,15 @@ rsync -a --delete \
 mkdir -p "$RAIZ/Mods/lovely"
 printf 'FusionJokers\n' > "$RAIZ/Mods/lovely/blacklist.txt"
 
-echo "== Copiando ajustes"
-for c in "${CONFIGS[@]}"; do
-    [ -f "$ORIGEN_CFG/$c.jkr" ] && cp "$ORIGEN_CFG/$c.jkr" "$RAIZ/config/$c.jkr"
-done
+# Los ajustes de config/ están revisados y versionados en el repositorio. Solo se copian
+# desde este PC si se pide (COPIAR_AJUSTES=1), para que los cambios personales de quien
+# empaqueta no viajen en el pack.
+if [ "${COPIAR_AJUSTES:-0}" = "1" ]; then
+    echo "== Copiando ajustes de este PC"
+    for c in "${CONFIGS[@]}"; do
+        [ -f "$ORIGEN_CFG/$c.jkr" ] && cp "$ORIGEN_CFG/$c.jkr" "$RAIZ/config/$c.jkr"
+    done
+fi
 
 echo "== Creando ZIP en dist/"
 rm -rf "$DIST"; mkdir -p "$DIST/mods"

@@ -91,8 +91,9 @@ end
 -- Devuelve los identificadores de mod que aparecen en un texto, en orden
 local function ids_en_texto(texto)
     local resultado = {}
-    -- Archivos de mods cargados por Steamodded: [SMODS <id> "ruta"]:línea
-    for id, ruta, linea in texto:gmatch('%[SMODS ([^%s%]]+) "([^"]*)"%]:(%d+)') do
+    -- Archivos de mods cargados por Steamodded: [SMODS <id> "ruta"]:línea. El «]» de cierre
+    -- puede faltar en el mensaje que enseña la pantalla de error, así que es opcional.
+    for id, ruta, linea in texto:gmatch('%[SMODS ([^%s%]]+) "([^"]*)"%]?:(%d+)') do
         resultado[#resultado + 1] = { id = id, ruta = ruta, linea = linea, pos = 0 }
     end
     return resultado

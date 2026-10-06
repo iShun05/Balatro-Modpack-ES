@@ -1,4 +1,4 @@
---- Guía y Traducción ES · v0.5
+--- Guía y Traducción ES · v0.6
 --- Explica en español cada mod instalado y traduce al español lo que
 --- los demás mods dejaron en inglés, sin tocar sus archivos.
 ---   · localization/es_ES.lua          → fichas de cada mod (menú «Mods»)
@@ -8,7 +8,7 @@
 local mod = SMODS.current_mod
 
 GuiaES = GuiaES or {}
-GuiaES.VERSION = "0.5"
+GuiaES.VERSION = "0.6"
 GuiaES.INSTAGRAM = "https://www.instagram.com/_shun._05/"
 GuiaES.MODS_POR_PAGINA = 8
 

@@ -329,3 +329,35 @@ pattern = "local hands = math.min(self.config.max_hands,math.floor((G.GAME.dolla
 position = "at"
 payload = "local hands = math.min(self.config.max_hands, math.floor(guiaes_num(G.GAME.dollars + (G.GAME.dollar_buffer or 0)) / self.config.every))"
 match_indent = true
+
+# Talisman: al ganar o gastar dinero, `context.amount` llega como número grande (tabla) y
+# estos comodines lo comparaban con un número normal (`amount > 0`): el juego se cerraba
+# al cobrar al final de una ronda. No se convierte el valor para todos los mods porque
+# otros (Extra Credit) lo comparan con to_big(0); se corrige cada sitio.
+[[patches]]
+[patches.regex]
+target = '''=[SMODS TheBindingOfJimbo "src/items/0_rebirth/h211_240.lua"]'''
+pattern = '''context\.amount > 0'''
+position = "at"
+payload = '''guiaes_num(context.amount) > 0'''
+
+[[patches]]
+[patches.regex]
+target = '''=[SMODS TheBindingOfJimbo "src/trinkets/b31-60.lua"]'''
+pattern = '''context\.amount > 0'''
+position = "at"
+payload = '''guiaes_num(context.amount) > 0'''
+
+[[patches]]
+[patches.regex]
+target = '''=[SMODS TheBindingOfJimbo "src/items/3_repentance/f691-720.lua"]'''
+pattern = '''context\.amount < 0'''
+position = "at"
+payload = '''guiaes_num(context.amount) < 0'''
+
+[[patches]]
+[patches.regex]
+target = '''=[SMODS ortalab "objects/jokers/mint_condition.lua"]'''
+pattern = '''context\.amount > 0'''
+position = "at"
+payload = '''guiaes_num(context.amount) > 0'''

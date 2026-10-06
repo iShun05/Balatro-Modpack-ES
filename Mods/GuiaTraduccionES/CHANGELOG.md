@@ -1,5 +1,13 @@
 # Historial de cambios — Guía y Traducción ES
 
+## v0.6 — 2026-10-06
+### Corregido
+- **Cierre al cobrar dinero con comodines de The Binding of Jimbo y Ortalab.** Síntoma: al pulsar «Cobrar» al final de una ronda con el comodín *Piggy Bank* el juego se cerraba con `attempt to compare number with table`. Causa: con Talisman, el importe de cada ganancia o gasto de dinero (`context.amount`) llega como número grande y cuatro comodines lo comparaban con un número normal. Sitios arreglados: el comodín *Piggy Bank* y la baratija *Counterfeit Penny* (comparan `> 0`), el comodín de gasto en tienda de Repentance (`< 0`) y *Mint Condition* de Ortalab. No se convierte el importe para todos los mods porque otros, como Extra Credit, lo comparan con `to_big(0)`.
+- **La pantalla de error nombraba un mod equivocado.** Síntoma: con el fallo anterior, la cabecera decía «Mod más probable: Multiplayer» y ofrecía desactivar Multiplayer, Handy y Too Many Jokers, cuando el fallo era de The Binding of Jimbo. Causa: el mensaje de error llega sin el corchete de cierre en `[SMODS <mod> "archivo"]:línea` y la búsqueda lo exigía, así que caía a la pila, donde siempre aparece Multiplayer. Ahora el corchete es opcional y el primer candidato es el mod del propio mensaje.
+### Archivos y pruebas
+- `lovely.toml` (39 parches, 4 nuevos), `cierres.lua`, `manifest.json`, `main.lua`, `localization/es_ES.lua`.
+- Probado en el juego real: partida con *Piggy Bank* y `ease_dollars(to_big(9))` → sin cierre y el comodín sube su valor de 0 a 1. Los 3 parches de The Binding of Jimbo aparecen en el volcado de Lovely; el de Ortalab sigue la misma expresión (Ortalab estaba desactivado en el pack activo). La detección del culpable se probó con el mensaje exacto de la pantalla de error: ahora señala The Binding of Jimbo, línea 20.
+
 ## v0.5 — 2026-10-02
 - **Pantalla de error que señala al mod culpable** (`cierres.lua`): cuando el juego se cierra por un error, la pantalla de Steamodded ahora empieza por una explicación en español: qué mod ha fallado (por los archivos de la pila y del mensaje), en qué archivo y línea, qué significa el error y qué otros mods aparecen. **Pulsa 1, 2 o 3 para desactivar ese mod** (y los que dependen de él, p. ej. Talisman arrastra a Cryptid) y el juego se reabre solo; la partida a medias se aparta para no cerrarse al continuar. `R` reabre sin cambios. Cada cierre queda en `guiaes_cierres.log`.
 - **Reinicio fiable**: el reinicio interno de LÖVE (`SMODS.restart_game`) fallaba con Multiplayer; ahora la pantalla de error, el menú «Mods» de Steamodded y los packs usan la reapertura en un proceso nuevo.

@@ -5,7 +5,7 @@ Pack de **30 mods de Balatro** traducidos y explicados en español, revisado par
 > [!NOTE]
 > **Aún por comprobar:** que en **Windows** el juego se reabra solo al aplicar un pack o al desactivar un mod desde la pantalla de error (en Mac está probado). Si no se abre, ábrelo tú desde Steam: los cambios ya están aplicados. Todos los packs (Calidad de vida, Balatro ampliado, Kino, Pokémon, Isaac, Ortalab y Cryptid) se han probado ya por separado con el bot sin cierres. Si el juego se cierra, la pantalla de error dice qué mod falló y te deja desactivarlo con una tecla.
 
-- **Versión actual del pack:** v0.4
+- **Versión actual del pack:** v0.5
 - **Plataformas:** Windows 10/11 y macOS (Apple Silicon e Intel), Balatro de Steam
 - **Base:** Steamodded 26.829.0 · Lovely 0.9.0 · Talisman 2.7 · Multiplayer 0.5.5
 
@@ -99,6 +99,7 @@ Antes de publicar el pack se jugaron **partidas automáticas completas durante h
 | Desbloqueos y récords (Talisman) | Al desbloquear cartas (p. ej. «Copa de sake» de Paperback) o batir el récord de mano con Cartomancer | Se pasan los valores en el formato que espera cada mod |
 | Aviso de desbloqueo | Al mostrar una carta desbloqueada (carta «bloqueada» inexistente) | Se ignoran mejoras de cartas que no existen |
 | Baraja «Keeper» de Isaac | Al empezar una ciega con esa baraja | Cálculo de manos extra compatible con Talisman |
+| Dinero (Talisman) en comodines | Al cobrar al final de una ronda con *Piggy Bank*, la baratija *Counterfeit Penny*, el comodín de gasto en tienda de Repentance (The Binding of Jimbo) o *Mint Condition* (Ortalab) | Comparación del importe compatible con números grandes |
 | Cartas forzadas | Funda «Papel» de Paperback con reglamentos de Multiplayer; funda «Misterio» de Kino | Se deduce el tipo o se crea una carta del mismo tipo |
 | Pokermon / The Binding of Jimbo · créditos | Al pasar el ratón por una etiqueta o sello de otro mod | Se ignoran los que no están registrados |
 | Ortalab · insignia de ciega | Mientras se reconstruye el HUD | Comprobación de que el elemento existe |
@@ -114,7 +115,7 @@ Cada nombre enlaza a su ficha en español (qué hace, autor, página original y 
 | Mod | Categoría | Versión | Para qué sirve |
 |---|---|---|---|
 | [BetterSpanishLocale](docs/mods/BetterSpanishLocale.md) | Base | 1.0 | Corrige la traducción española del juego |
-| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.5 | Esta guía y las traducciones al español |
+| [Guía y Traducción ES](docs/mods/GuiaTraduccionES.md) | Base | 0.6 | Esta guía y las traducciones al español |
 | [Steamodded](docs/mods/smods.md) | Base | 26.829.0 | Cargador de mods: sin él no funciona ninguno |
 | [Talisman](docs/mods/Talisman-2.7.md) | Base | 2.7 | Sin límite de puntuación y sin animaciones lentas |
 | [Cartomancer](docs/mods/Cartomancer.md) | Calidad de vida | 4.17c | Comodidades: apilar cartas, ver tienda... |
@@ -174,12 +175,13 @@ Borra la carpeta `Mods` (Windows: `%APPDATA%\Balatro\Mods`; Mac: `~/Library/Appl
 ## Versiones y código fuente
 | Versión | Fecha | Cambios | Código |
 |---|---|---|---|
-| [`v0.4`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.4) **(actual)** | 2026-10-03 | El botón derecho del ratón vuelve a deseleccionar las cartas (ajuste de Handy) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.4) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.4.zip) |
+| [`v0.5`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.5) **(actual)** | 2026-10-06 | Corrige el cierre al cobrar con Piggy Bank (Talisman) y la pantalla de error que nombraba mal el mod (Guía v0.6) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.5) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.5.zip) |
+| [`v0.4`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.4) | 2026-10-03 | El botón derecho del ratón vuelve a deseleccionar las cartas (ajuste de Handy) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.4) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.4.zip) |
 | [`v0.3`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.3) | 2026-10-02 | Pantalla de error con el mod culpable, comprobador de mods en Multiplayer, perfiles de packs y todos los packs probados (Guía v0.5) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.3) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.3.zip) |
 | [`v0.2`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.2) | 2026-10-02 | Packs de mods combinables, menú principal centrado y más cierres corregidos (Guía v0.4) | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.2) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.2.zip) |
 | [`v0.1`](https://github.com/iShun05/Balatro-Modpack-ES/releases/tag/v0.1) | 2026-10-02 | Primera versión: 30 mods en español, instaladores Windows/Mac, 6 cierres corregidos | [Ver código](https://github.com/iShun05/Balatro-Modpack-ES/tree/v0.1) · [ZIP](https://github.com/iShun05/Balatro-Modpack-ES/archive/refs/tags/v0.1.zip) |
 
-Para volver a una versión: `git checkout v0.4`.
+Para volver a una versión: `git checkout v0.5`.
 
 ## Créditos
 Cada mod pertenece a sus autores (ver su ficha en `docs/mods/`). Este pack solo los reúne, traduce y corrige su compatibilidad.
