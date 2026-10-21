@@ -7,7 +7,7 @@
 set -euo pipefail
 VERSION="${1:?Indica la versión, p. ej. v0.1}"
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
-ORIGEN_MODS="${ORIGEN_MODS:-/Volumes/SanDisk/mods/Balatro}"
+ORIGEN_MODS="${ORIGEN_MODS:-$HOME/Documents/Juegos.nosync/mods/Balatro}"
 ORIGEN_CFG="${ORIGEN_CFG:-$HOME/Library/Application Support/Balatro/config}"
 DIST="$RAIZ/dist"
 
